@@ -7,8 +7,6 @@ import com.peeraid.backend.mapper.ResourceMapper;
 import com.peeraid.backend.models.Resource;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,9 +23,6 @@ public class ResourceService {
 
         Resource resource = ResourceMapper.mapToResource(createResourceDto);
         resource.setUser(Utill.getCurrentUser());
-        resource.setAvailable(true);
-        resource.setDateCreated(LocalDateTime.now());
-
         resourceRepo.save(resource);
 
     }

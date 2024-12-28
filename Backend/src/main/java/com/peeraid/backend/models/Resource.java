@@ -31,13 +31,15 @@ public class Resource {
 
     private String imageUrl;
 
-    private Boolean available;
+    @Column(nullable = false)
+    private Boolean available = true;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     private ResourceType resourceType;
 
-    private LocalDateTime dateCreated;
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dateCreated = LocalDateTime.now();
 
     public Resource() {
     }
