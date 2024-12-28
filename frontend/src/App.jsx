@@ -1,35 +1,40 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/context/AuthContext";
 
-
-import './index.css'
-import LandingPage from './components/LandingPage'
-import { Route, Routes } from 'react-router-dom'
-import Login from './components/Login'
-import NavBar from './components/NavBar'
-import Signup from './components/Signup'
-import { ToastContainer } from "react-toastify"; // Import Toastify container
-import "react-toastify/dist/ReactToastify.css"; // Import styles
-import Footer from './components/Footer'
+import { NavBar } from "@/components/NavBar";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import Dashboard from "./components/Dashboard";
+import LandingPage from "./components/LandingPage";
+import PrivateRoute from "./routes/PrivateRoute";
+import { ToastContainer } from "react-toastify";
+import VerifyOTP from "./components/VerifyOTP";
+import Footer from "./components/Footer";
 
 function App() {
-  
-
   return (
-    <>
-      <ToastContainer/>
-
-      <div className='wrapper max-w-[1350px] mx-auto px-4 py-8'>
+    <AuthProvider>
+    <ToastContainer/>
+      <Router>
         <NavBar />
-      </div>
-      <Routes>
-        {/* Define the Routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup/>} />
-        
-      </Routes>
-     <Footer/>
-    </>
-  )
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/verify" element={<VerifyOTP />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+        <Footer/>
+      </Router>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
