@@ -1,8 +1,11 @@
 package com.peeraid.backend.controllers;
 
 
+import com.peeraid.backend.dto.UserDto;
+import com.peeraid.backend.mapper.UserMapper;
 import com.peeraid.backend.models.User;
 import com.peeraid.backend.services.UserService;
+import com.peeraid.backend.services.Utill;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,15 +24,9 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> authenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(currentUser);
+    public ResponseEntity<UserDto> authenticatedUser() {
+        User currentUser = Utill.getCurrentUser();
+        return ResponseEntity.ok(UserMapper.mapToUserDto(currentUser));
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<User>> allUsers() {
-        List <User> users = userService.allUsers();
-        return ResponseEntity.ok(users);
-    }
 }

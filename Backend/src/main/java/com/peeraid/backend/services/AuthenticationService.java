@@ -3,6 +3,7 @@ package com.peeraid.backend.services;
 import com.peeraid.backend.Repository.UserRepository;
 import com.peeraid.backend.dto.LoginUserDto;
 import com.peeraid.backend.dto.RegisterUserDto;
+import com.peeraid.backend.dto.UserDto;
 import com.peeraid.backend.dto.VerifyUserDto;
 import com.peeraid.backend.models.User;
 import jakarta.mail.MessagingException;
@@ -29,19 +30,26 @@ public class AuthenticationService {
         this.emailService = emailService;
     }
 
-    public User signUp(RegisterUserDto input) {
-        User user = new User(input.getName(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
-        user.setVerificationCode(generateVerificationCode());
-        user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
-        user.setVerified(false);
-        sendVerificationEmail(user);
-        return userRepository.save(user);
+    public String signUp(RegisterUserDto input) {
+      Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
 
+        if (optionalUser.isPresent()) {
+            throw  new RuntimeException("User Already Exist");
+        }
+
+            User user = new User(input.getName(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
+            user.setVerificationCode(generateVerificationCode());
+            user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
+            user.setVerified(false);
+            sendVerificationEmail(user);
+            userRepository.save(user);
+
+            return "User created";
     }
 
     public User authenticate(LoginUserDto input) {
         User user = userRepository.findByEmail(input.getEmail())
-                .orElseThrow(() -> new RuntimeException("User Not Found"));
+                .orElseThrow(() -> new RuntimeException("Invalid Credentials"));
 
         if (!user.isEnabled()) {
             throw new RuntimeException("Account not Verified");
@@ -61,8 +69,11 @@ public class AuthenticationService {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+            if (user.isEnabled()){
+                throw new RuntimeException("User already verified");
+            }
             if (user.getVerificationCodeExpiresAt().isBefore(LocalDateTime.now())) {
-                throw new RuntimeException("Verification Code Expires");
+                throw new RuntimeException("Verification Code is Expired");
             }
             if (user.getVerificationCode().equals(input.getVerificationCode())) {
                 user.setVerified(true);
@@ -73,7 +84,7 @@ public class AuthenticationService {
                 throw new RuntimeException("Invalid Verification Code");
             }
         } else {
-            throw new RuntimeException("User not Found");
+            throw new RuntimeException("Invalid Email");
         }
     }
 
