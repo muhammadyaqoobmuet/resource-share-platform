@@ -1,10 +1,23 @@
 
 
+import { useEffect } from 'react';
 import { Timeline } from './Timeline'
 import { InputWithButton } from './ui/InputWithButton'
 import { motion } from "framer-motion"
+import { useNavigate } from 'react-router-dom';
 
 function LandingPage() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // Check if the user is logged in by verifying if a token exists in localStorage
+        const userToken = localStorage.getItem("token");
+
+        if (userToken) {
+            // If the user is logged in, redirect them to /dashboard
+            navigate("/dashboard");
+        }
+    }, [navigate]);
     return (
         <div>
 

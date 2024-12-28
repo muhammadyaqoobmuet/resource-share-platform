@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 
 import { NavBar } from "@/components/NavBar";
 import Login from "./components/Login";
@@ -12,9 +12,11 @@ import VerifyOTP from "./components/VerifyOTP";
 import Footer from "./components/Footer";
 
 function App() {
+
+
   return (
     <AuthProvider>
-    <ToastContainer/>
+      <ToastContainer />
       <Router>
         <NavBar />
         <Routes>
@@ -31,7 +33,7 @@ function App() {
             }
           />
         </Routes>
-        <Footer/>
+        <Footer />
       </Router>
     </AuthProvider>
   );
