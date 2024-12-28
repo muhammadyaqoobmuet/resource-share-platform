@@ -24,7 +24,7 @@ public class Resource {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private Category category;
+    private ResourceCategory resourceCategory;
 
     @Column(length = 200)
     private String description;
@@ -35,7 +35,7 @@ public class Resource {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
-    private Status status;
+    private ResourceType resourceType;
 
     private LocalDateTime dateCreated;
 
@@ -43,16 +43,16 @@ public class Resource {
     }
 
     public Resource(String resourceName,
-                    Category category,
+                    ResourceCategory resourceCategory,
                     String description,
                     String imageUrl,
-                    Status status) {
+                    ResourceType resourceType) {
 
         this.resourceName = resourceName;
-        this.category = category;
+        this.resourceCategory = resourceCategory;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.status = status;
+        this.resourceType = resourceType;
     }
 
 

@@ -22,6 +22,7 @@ public class ResourceService {
     }
 
     public void createResource(CreateResourceDto createResourceDto) {
+
         Resource resource = ResourceMapper.mapToResource(createResourceDto);
         resource.setUser(Utill.getCurrentUser());
         resource.setAvailable(true);
@@ -31,6 +32,7 @@ public class ResourceService {
 
     }
     public List<ResourceDto> getResources() {
+
         List<Resource> resources = resourceRepo.findAllOrderByCreatedDateDesc();
 
        return resources.stream().map(ResourceMapper::mapToResourceDto).collect(Collectors.toList()) ;
@@ -38,7 +40,9 @@ public class ResourceService {
     }
 
     public String updateResource(ResourceDto resourceDto) {
-        Resource resource = resourceRepo.findByResourceId(resourceDto.getId()).orElseThrow(()-> new RuntimeException("Resource not found"));
+        Resource resource = resourceRepo.findByResourceId(resourceDto.getId())
+                .orElseThrow(()-> new RuntimeException("Resource not found"));
+
         if (resource.getUser().getUserId() == Utill.getCurrentUser().getUserId()){
             resource =    ResourceMapper.mapToResource(resourceDto,resource);
             resourceRepo.save(resource);
@@ -47,6 +51,19 @@ public class ResourceService {
         }
 
             return "Updated Resource Successfully";
+
+    }
+
+    public String deleteResource(ResourceDto resourceDto) {
+        Resource resource = resourceRepo.findByResourceId(resourceDto.getId())
+                        .orElseThrow(()-> new RuntimeException("Resource not found"));
+        if (resource.getUser().getUserId() == Utill.getCurrentUser().getUserId()){
+            resourceRepo.delete(resource);
+
+        }else {
+            throw  new AuthorizationDeniedException("You do not have permission to delete this resource");
+        }
+        return "Deleted Resource Successfully";
 
     }
 

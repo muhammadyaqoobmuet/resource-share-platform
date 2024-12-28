@@ -23,18 +23,32 @@ public class ResourceController {
     @PostMapping("/create")
     public ResponseEntity<String> createResource(@RequestBody CreateResourceDto createResourceDto) {
         resourceService.createResource(createResourceDto);
-        return ResponseEntity.ok("Resource Added");
+        return ResponseEntity.accepted().body("Resource Added");
     }
 
     @PostMapping("/update")
     public ResponseEntity<String> updateResource(@RequestBody ResourceDto resourceDto) {
-            return ResponseEntity.ok(resourceService.updateResource(resourceDto));
+        try {
+        return ResponseEntity.accepted().body(resourceService.updateResource(resourceDto));
+
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
 
     }
     @GetMapping("/")
     public ResponseEntity<List<ResourceDto>> getAllResources() {
-      List<ResourceDto> resourceDtos =   resourceService.getResources();
-      return ResponseEntity.ok(resourceDtos);
+      List<ResourceDto> resources =   resourceService.getResources();
+      return ResponseEntity.ok(resources);
+    }
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteResource(@RequestBody ResourceDto resourceDto) {
+        try {
+        return ResponseEntity.ok(resourceService.deleteResource(resourceDto));
+
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 

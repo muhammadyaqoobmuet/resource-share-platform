@@ -1,8 +1,6 @@
 package com.peeraid.backend.Repository;
 
-import com.peeraid.backend.models.Category;
 import com.peeraid.backend.models.Resource;
-import com.peeraid.backend.models.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

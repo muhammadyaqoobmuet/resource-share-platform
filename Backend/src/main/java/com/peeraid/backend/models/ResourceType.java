@@ -1,5 +1,5 @@
 package com.peeraid.backend.models;
 
-public enum Status {
+public enum ResourceType {
     LEND, DONATE
 }
