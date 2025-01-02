@@ -29,14 +29,18 @@ public class Resource {
     @Column(length = 200)
     private String description;
 
-    private String imageUrl;
-
     @Column(nullable = false)
     private Boolean available = true;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     private ResourceType resourceType;
+
+    @Column(nullable = false)
+    private String imageUrl;
+
+    @Column(nullable = false)
+    private String imagePublicId;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime dateCreated = LocalDateTime.now();
@@ -47,13 +51,11 @@ public class Resource {
     public Resource(String resourceName,
                     ResourceCategory resourceCategory,
                     String description,
-                    String imageUrl,
                     ResourceType resourceType) {
 
         this.resourceName = resourceName;
         this.resourceCategory = resourceCategory;
         this.description = description;
-        this.imageUrl = imageUrl;
         this.resourceType = resourceType;
     }
 

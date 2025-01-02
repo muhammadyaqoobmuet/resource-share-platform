@@ -10,15 +10,15 @@ public class ResourceDto {
     private String name;
     private String description;
     private String category;
-    private String status;
+    private String resourceType;
     private String imageUrl;
 
-    public ResourceDto(long id, String name, String description, String category, String status, String imageUrl) {
+    public ResourceDto(long id, String name, String description, String category, String resourceType, String imageUrl) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.category = category;
-        this.status = status;
+        this.resourceType = resourceType;
         this.imageUrl = imageUrl;
     }
 }

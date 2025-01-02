@@ -26,7 +26,7 @@ public class User implements UserDetails {
     private String password;
     @Column(nullable = false, unique = true)
     private String email;
-    private boolean verified;
+    private boolean verified = false;
     private LocalDate dateCreated = LocalDate.now();
     private String verificationCode;
     private LocalDateTime verificationCodeExpiresAt;

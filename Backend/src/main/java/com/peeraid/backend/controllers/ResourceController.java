@@ -2,11 +2,16 @@ package com.peeraid.backend.controllers;
 
 import com.peeraid.backend.dto.CreateResourceDto;
 import com.peeraid.backend.dto.ResourceDto;
+import com.peeraid.backend.services.CloudinaryService;
 import com.peeraid.backend.services.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -16,23 +21,35 @@ public class ResourceController {
     ResourceService resourceService;
 
     @Autowired
-    public ResourceController(ResourceService resourceService) {
+    public ResourceController(ResourceService resourceService, CloudinaryService cloudinaryService) {
         this.resourceService = resourceService;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createResource(@RequestBody CreateResourceDto createResourceDto) {
-        resourceService.createResource(createResourceDto);
-        return ResponseEntity.accepted().body("Resource Added");
+    public ResponseEntity<String> createResource(@RequestPart("resource") CreateResourceDto createResourceDto,
+                                                 @RequestPart("file") MultipartFile file) {
+       try {
+            resourceService.createResource(createResourceDto,file);
+            return new ResponseEntity<>("Resource Created", HttpStatus.CREATED);
+
+       }catch (Exception e){
+           return  ResponseEntity.badRequest().body(e.getMessage());
+       }
+
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<String> updateResource(@RequestBody ResourceDto resourceDto) {
+    @PutMapping("/update")
+    public ResponseEntity<String> updateResource(@RequestPart("resource") ResourceDto resourceDto,@RequestPart("file") MultipartFile file) {
         try {
-        return ResponseEntity.accepted().body(resourceService.updateResource(resourceDto));
 
+        return ResponseEntity.accepted().body(resourceService.updateResource(resourceDto,file));
+
+        }catch (AuthorizationDeniedException e ){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (IOException e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -41,13 +58,17 @@ public class ResourceController {
       List<ResourceDto> resources =   resourceService.getResources();
       return ResponseEntity.ok(resources);
     }
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<String> deleteResource(@RequestBody ResourceDto resourceDto) {
         try {
         return ResponseEntity.ok(resourceService.deleteResource(resourceDto));
 
+        }catch (AuthorizationDeniedException e ){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (IOException e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -10,14 +10,13 @@ public class CreateResourceDto {
     private String name;
     private String description;
     private String category;
-    private String status;
-    private String imageUrl;
+    private String resourceType;
 
-    public CreateResourceDto(String name, String description, String category, String status, String imageUrl) {
+    public CreateResourceDto(String name, String description, String category, String resourceType) {
         this.name = name;
         this.description = description;
         this.category = category;
-        this.status = status;
-        this.imageUrl = imageUrl;
+        this.resourceType = resourceType;
+
     }
 }

@@ -15,26 +15,17 @@ public class ResourceMapper {
                 resource.getDescription(),
                 resource.getResourceCategory().toString(),
                 resource.getResourceType().toString(),
-                "TO-BE-DECIDED"
+                resource.getImageUrl()
         );
     }
-    public static  Resource mapToResource(CreateResourceDto createResourceDto){
+    public static  Resource mapToResource(CreateResourceDto createResourceDto) {
         ResourceCategory resourceCategory = ResourceCategory.valueOf(createResourceDto.getCategory());
-        ResourceType resourceType = ResourceType.valueOf(createResourceDto.getStatus());
+        ResourceType resourceType = ResourceType.valueOf(createResourceDto.getResourceType());
         return new Resource(createResourceDto.getName(),
                 resourceCategory,
-                            createResourceDto.getDescription(),
-                            createResourceDto.getImageUrl(),
+                createResourceDto.getDescription(),
                 resourceType);
-    }
-    public static CreateResourceDto mapToCreateResourceDto(Resource resource){
-        return new CreateResourceDto(
-                resource.getResourceName(),
-                resource.getDescription(),
-                resource.getResourceCategory().toString(),
-                resource.getResourceType().toString(),
-                "TO-BE-DECIDED"
-        );
+
     }
 
     public static Resource mapToResource(ResourceDto resourceDto, Resource resource){
@@ -42,7 +33,7 @@ public class ResourceMapper {
         resource.setResourceName(resourceDto.getName());
         resource.setDescription(resourceDto.getDescription());
         resource.setResourceCategory(ResourceCategory.valueOf(resourceDto.getCategory()));
-        resource.setResourceType(ResourceType.valueOf(resourceDto.getStatus()));
+        resource.setResourceType(ResourceType.valueOf(resourceDto.getResourceType()));
         resource.setImageUrl(resourceDto.getImageUrl());
 
         return resource;
