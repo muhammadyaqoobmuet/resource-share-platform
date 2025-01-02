@@ -1,5 +1,6 @@
 package com.peeraid.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -58,10 +58,10 @@ public class ResourceController {
       List<ResourceDto> resources =   resourceService.getResources();
       return ResponseEntity.ok(resources);
     }
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteResource(@RequestBody ResourceDto resourceDto) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteResource(@PathVariable long id) {
         try {
-        return ResponseEntity.ok(resourceService.deleteResource(resourceDto));
+        return ResponseEntity.ok(resourceService.deleteResource(id));
 
         }catch (AuthorizationDeniedException e ){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());

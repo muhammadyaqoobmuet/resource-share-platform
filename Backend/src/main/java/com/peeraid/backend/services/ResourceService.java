@@ -61,8 +61,8 @@ public class ResourceService {
 
     }
 
-    public String deleteResource(ResourceDto resourceDto) throws IOException {
-        Resource resource = resourceRepo.findByResourceId(resourceDto.getId())
+    public String deleteResource(long id) throws IOException {
+        Resource resource = resourceRepo.findByResourceId(id)
                         .orElseThrow(()-> new RuntimeException("Resource not found"));
         if (resource.getUser().getUserId() == Utill.getCurrentUser().getUserId()){
             cloudinaryService.deleteImage(resource.getImagePublicId());
