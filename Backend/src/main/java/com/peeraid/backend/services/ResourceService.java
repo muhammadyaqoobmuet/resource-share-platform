@@ -74,4 +74,9 @@ public class ResourceService {
 
     }
 
+    public ResourceDto getResourcesById(long id) {
+        Resource resource = resourceRepo.findByResourceId(id)
+                .orElseThrow(()-> new RuntimeException("Resource not found"));
+        return ResourceMapper.mapToResourceDto(resource);
+    }
 }

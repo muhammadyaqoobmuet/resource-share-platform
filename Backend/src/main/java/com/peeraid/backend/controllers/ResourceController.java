@@ -41,7 +41,7 @@ public class ResourceController {
     @PutMapping("/update")
     public ResponseEntity<String> updateResource(@RequestPart("resource") ResourceDto resourceDto,@RequestPart("file") MultipartFile file) {
         try {
-
+            System.out.println(resourceDto.getResourceType()+ " " + resourceDto.getId()+ " " +resourceDto.getUserId());
         return ResponseEntity.accepted().body(resourceService.updateResource(resourceDto,file));
 
         }catch (AuthorizationDeniedException e ){
@@ -59,7 +59,7 @@ public class ResourceController {
       return ResponseEntity.ok(resources);
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteResource(@PathVariable long id) {
+    public ResponseEntity<String> deleteResource(@PathVariable("id") long id) {
         try {
         return ResponseEntity.ok(resourceService.deleteResource(id));
 
@@ -70,6 +70,16 @@ public class ResourceController {
         }catch (IOException e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getResourceById(@PathVariable("id") long id) {
+        try {
+        return new ResponseEntity<>(resourceService.getResourcesById(id),HttpStatus.FOUND);
+
+        }catch (RuntimeException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
 
