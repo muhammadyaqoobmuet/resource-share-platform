@@ -14,6 +14,6 @@ public class Utill {
                 return ((User) principal);
             }
         }
-        throw new RuntimeException("User not found");
+        return  null;
     }
 }

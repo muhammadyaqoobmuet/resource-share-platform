@@ -21,7 +21,7 @@ public class ResourceController {
     ResourceService resourceService;
 
     @Autowired
-    public ResourceController(ResourceService resourceService, CloudinaryService cloudinaryService) {
+    public ResourceController(ResourceService resourceService) {
         this.resourceService = resourceService;
     }
 
@@ -32,7 +32,7 @@ public class ResourceController {
             resourceService.createResource(createResourceDto,file);
             return new ResponseEntity<>("Resource Created", HttpStatus.CREATED);
 
-       }catch (Exception e){
+       }catch (IOException e){
            return  ResponseEntity.badRequest().body(e.getMessage());
        }
 

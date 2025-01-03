@@ -26,13 +26,11 @@ public class ResourceService {
     }
 
     public void createResource(CreateResourceDto createResourceDto,MultipartFile file) throws IOException {
-
         Image image =  cloudinaryService.uploadImage(file);
         Resource resource = ResourceMapper.mapToResource(createResourceDto);
         resource.setUser(Utill.getCurrentUser());
         resource.setImageUrl(image.getUrl());
         resource.setImagePublicId(image.getPublicID());
-
         resourceRepo.save(resource);
 
     }
