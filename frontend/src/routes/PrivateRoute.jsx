@@ -1,15 +1,17 @@
 import { Navigate } from "react-router-dom";
-
-const isAuthenticated = () => {
-    const token = localStorage.getItem("token");
-    const tokenExpiration = localStorage.getItem("tokenExpiration");
-    return token && new Date().getTime() < tokenExpiration;
-};
+import useAuthStore from "@/store/authStore";
 
 function PrivateRoute({ children }) {
-    if (!isAuthenticated()) {
-        return <Navigate to="/" />;
+    const { isAuthenticated, isVerified } = useAuthStore();
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" />;
     }
+
+    if (isAuthenticated && !isVerified) {
+        return <Navigate to="/verify" />;
+    }
+
     return children;
 }
 

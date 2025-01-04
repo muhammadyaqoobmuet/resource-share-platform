@@ -1,35 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
-import axios from "axios";
+import useAuthStore from "@/store/authStore"; // Import your Zustand store
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
 
 function Signup() {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const [isLoading, setIsLoading] = useState(false); // Loading state
+    const [formData, setFormData] = useState({});
     const navigate = useNavigate();
-    const { setName } = useAuth();
+    // Destructure required values and methods from the store
+    const { signup, setUser, isLoading, error } = useAuthStore();
 
     const onSubmit = async (data) => {
-        setIsLoading(true); // Set loading to true when request starts
+        setFormData(data); // Update formData state on form submission
         try {
-            const response = await axios.post("http://localhost:8080/auth/signup", data);
+            await signup(data); // Call signup from Zustand store
             toast.success("Signup successful! Please verify your email.");
-            console.log("Signup Response:", response.data);
-            if (response.data) {
-                navigate("/verify");
-                setName(response.data.name);
-            }
+            setUser(data.name); // Update the user info in the Zustand store
+            navigate("/verify"); // Redirect to verify page after signup
         } catch (error) {
             toast.error("Signup failed. Please try again.");
             console.error("Signup Error:", error.response?.data || error.message);
-        } finally {
-            setIsLoading(false); // Reset loading state
         }
     };
+
+    useEffect(() => {
+        // Avoid unnecessary updates, ensure formData has a condition to check
+        if (formData.name) {  // Assuming you want to check for the name field as an example
+            // Update state or perform any necessary actions
+            console.log("Form data updated:", formData);
+        }
+    }, [formData]);  // Effect will run every time formData changes
 
     return (
         <div className="my-36 flex items-center justify-center bg-gray-100">
@@ -75,9 +78,8 @@ function Signup() {
                             {...register("email", {
                                 required: "Email is required",
                                 pattern: {
-                                    value: /^[a-zA-Z0-9._%+-]+@students\.muet\.edu\.pk$/,
-                                    message:
-                                        "Enter a valid @muet.edu.pk email address",
+                                    // value: /^[a-zA-Z0-9._%+-]+@students\.muet\.edu\.pk$/,
+                                    message: "Enter a valid @muet.edu.pk email address",
                                 },
                             })}
                         />
@@ -102,8 +104,7 @@ function Signup() {
                                 },
                                 maxLength: {
                                     value: 12,
-                                    message:
-                                        "Password cannot exceed 12 characters",
+                                    message: "Password cannot exceed 12 characters",
                                 },
                             })}
                         />
@@ -115,11 +116,10 @@ function Signup() {
                     </div>
                     <Button
                         type="submit"
-                        className={`w-full py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-500 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                            }`}
+                        className={`w-full py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-500 ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                         disabled={isLoading} // Disable button while loading
                     >
-                        {isLoading ? "Registering..." : "Register"} {/* Show text based on loading */}
+                        {isLoading ? "Registering..." : "Register"}
                     </Button>
                 </form>
             </div>
