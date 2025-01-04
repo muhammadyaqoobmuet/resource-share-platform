@@ -6,7 +6,7 @@ import com.peeraid.backend.dto.ResourceDto;
 import com.peeraid.backend.mapper.ResourceMapper;
 import com.peeraid.backend.models.Image;
 import com.peeraid.backend.models.Resource;
-import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,7 +52,7 @@ public class ResourceService {
             resource.setImageUrl(url);
             resourceRepo.save(resource);
         }else {
-            throw new AuthorizationDeniedException("You do not have permission to update this resource");
+        throw new AccessDeniedException("You do not have permission to update this resource");
         }
 
             return "Updated Resource Successfully";
@@ -66,7 +66,7 @@ public class ResourceService {
             cloudinaryService.deleteImage(resource.getImagePublicId());
             resourceRepo.delete(resource);
         }else {
-            throw  new AuthorizationDeniedException("You do not have permission to delete this resource");
+            throw  new java.nio.file.AccessDeniedException("You do not have permission to delete this resource");
         }
         return "Deleted Resource Successfully";
 
