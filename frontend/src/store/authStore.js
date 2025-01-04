@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import axiosInstance from "@/utils/axiosInstance";
 
 // Initialize state from localStorage
 const isAuthenticated = Boolean(localStorage.getItem("isAuthenticated"));
@@ -86,6 +87,15 @@ const useAuthStore = create((set) => ({
 
     // Set user data
     setUser: (user) => set({ user }),
+
+    getUser: async () => {
+        try {
+            const response = await axiosInstance.get('/user/me');
+            set({ user: response.data }); // Store the user data globally
+        } catch (error) {
+            console.log(error);
+        }
+    },
 
     // Logout action
     logout: () => {

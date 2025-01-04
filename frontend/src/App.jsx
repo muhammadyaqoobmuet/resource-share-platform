@@ -11,14 +11,17 @@ import PrivateRoute from "./routes/PrivateRoute";
 import VerifyOTP from "./components/VerifyOTP";
 import Footer from "./components/Footer";
 
+
+
 function App() {
-  const { isAuthenticated, isVerified } = useAuthStore();
+  const { isAuthenticated, isVerified, } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     // If already authenticated, redirect to Dashboard or Verify
     if (isAuthenticated) {
       if (isVerified) {
+        
         navigate('/dashboard');
       } else {
         navigate('/verify');

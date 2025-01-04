@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "@/store/authStore"; // Import your store
 
 function Login() {
-    const { login, isLoading, error, isAuthenticated } = useAuthStore(); // Check for authentication state
+    const { login, isLoading, error, isAuthenticated, getUser } = useAuthStore(); // Check for authentication state
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
 
@@ -21,6 +21,7 @@ function Login() {
             await login(data); // Call the login method from store
             toast.success("Login successful");
             navigate("/dashboard"); // Redirect to dashboard after successful login
+            
         } catch (error) {
             toast.error(error?.message || "Invalid credentials. Please try again.");
         }

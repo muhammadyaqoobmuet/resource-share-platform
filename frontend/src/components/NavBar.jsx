@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button"; // Make sure this is imported correctly
 import useAuthStore from "@/store/authStore"; // Assuming you have a store to manage authentication
 import { Cross, EyeClosed, HammerIcon, LogOutIcon, MailIcon, MenuIcon, Plus, PoundSterling, Upload } from "lucide-react";
+import ProfileCard from "./ProfileCard";
 
 function NavBar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for toggling the sidebar
@@ -57,7 +58,7 @@ function NavBar() {
                 </button>
 
                 {/* Show buttons on large screens */}
-                <div className="hidden lg:flex space-x-4">
+                <div className="hidden lg:flex space-x-4 lg:items-center">
                   <Button
                     onClick={() => navigate("/upload")}
                     className="text-black bg-transparent hover:bg-black hover:text-white"
@@ -70,12 +71,14 @@ function NavBar() {
                   >
                     My Posts
                   </Button>
-                  <Button
+                  {/* <Button
                     onClick={handleLogout}
                     className="text-black bg-transparent hover:bg-red-900 hover:text-white"
                   >
                     Logout
-                  </Button>
+                  </Button> */}
+
+                  <ProfileCard />
                 </div>
               </>
             )}
