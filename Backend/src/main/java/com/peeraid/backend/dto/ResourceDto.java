@@ -1,11 +1,16 @@
 package com.peeraid.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
+@AllArgsConstructor
 public class ResourceDto {
     private long id;
     private String name;
@@ -14,14 +19,7 @@ public class ResourceDto {
     private String resourceType;
     private String imageUrl;
     private long userId;
+    private boolean available;
+    private LocalDateTime dateAdded;
 
-    public ResourceDto(long id, String name, String description, String category, String resourceType, String imageUrl, long userId) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.resourceType = resourceType;
-        this.imageUrl = imageUrl;
-        this.userId = userId;
-    }
 }

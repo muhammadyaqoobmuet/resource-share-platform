@@ -16,7 +16,9 @@ public class ResourceMapper {
                 resource.getResourceCategory().toString(),
                 resource.getResourceType().toString(),
                 resource.getImageUrl(),
-                resource.getUser().getUserId()
+                resource.getUser().getUserId(),
+                resource.getAvailable(),
+                resource.getDateCreated()
         );
     }
     public static  Resource mapToResource(CreateResourceDto createResourceDto) {

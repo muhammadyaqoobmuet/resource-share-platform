@@ -1,5 +1,6 @@
 package com.peeraid.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,10 @@ public class Resource {
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private User user;
+
+    @OneToOne
+    @JoinColumn(name ="borrowerId")
+    private User borrower = null ;
 
     @Column(nullable = false, length = 100)
     private String resourceName;
@@ -43,6 +48,7 @@ public class Resource {
     private String imagePublicId;
 
     @Column(nullable = false, updatable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDateTime dateCreated = LocalDateTime.now();
 
     public Resource() {

@@ -23,7 +23,7 @@ public class ResourceController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createResource(@RequestPart CreateResourceDto resource,@RequestPart MultipartFile image) {
+    public ResponseEntity<String> createResource(@RequestPart CreateResourceDto resource, @RequestPart MultipartFile image) {
         try {
             resourceService.createResource(resource,image);
             return new ResponseEntity<>("Resource Created", HttpStatus.CREATED);
@@ -71,6 +71,15 @@ public class ResourceController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<List<ResourceDto>> getMyResources() {
+        try {
+         return ResponseEntity.ok(resourceService.getMyResources());
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 

@@ -6,6 +6,7 @@ import com.peeraid.backend.dto.ResourceDto;
 import com.peeraid.backend.mapper.ResourceMapper;
 import com.peeraid.backend.models.Image;
 import com.peeraid.backend.models.Resource;
+import com.peeraid.backend.models.User;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +26,7 @@ public class ResourceService {
         this.cloudinaryService = cloudinaryService;
     }
 
-    public void createResource(CreateResourceDto createResourceDto,MultipartFile file) throws IOException {
+    public void createResource(CreateResourceDto createResourceDto, MultipartFile file) throws IOException {
         Image image =  cloudinaryService.uploadImage(file);
         Resource resource = ResourceMapper.mapToResource(createResourceDto);
         resource.setUser(Utill.getCurrentUser());
@@ -43,8 +44,7 @@ public class ResourceService {
     }
 
     public String updateResource(ResourceDto resourceDto, MultipartFile file) throws IOException {
-        Resource resource = resourceRepo.findByResourceId(resourceDto.getId())
-                .orElseThrow(()-> new RuntimeException("Resource not found"));
+        Resource resource = getResource(resourceDto.getId());
 
         if (resource.getUser().getUserId() == Utill.getCurrentUser().getUserId()){
           String url =   cloudinaryService.updateImage(file,resource.getImagePublicId());
@@ -60,21 +60,32 @@ public class ResourceService {
     }
 
     public String deleteResource(long id) throws IOException {
-        Resource resource = resourceRepo.findByResourceId(id)
-                        .orElseThrow(()-> new RuntimeException("Resource not found"));
+        Resource resource = getResource(id);
         if (resource.getUser().getUserId() == Utill.getCurrentUser().getUserId()){
             cloudinaryService.deleteImage(resource.getImagePublicId());
             resourceRepo.delete(resource);
         }else {
-            throw  new java.nio.file.AccessDeniedException("You do not have permission to delete this resource");
+            throw  new AccessDeniedException("You do not have permission to delete this resource");
         }
         return "Deleted Resource Successfully";
 
     }
 
     public ResourceDto getResourcesById(long id) {
-        Resource resource = resourceRepo.findByResourceId(id)
-                .orElseThrow(()-> new RuntimeException("Resource not found"));
+        Resource resource = getResource(id);
         return ResourceMapper.mapToResourceDto(resource);
     }
+
+    public List<ResourceDto> getMyResources() {
+        User user = Utill.getCurrentUser();
+      List<Resource> resources =   resourceRepo.findAllByUserId(user.getUserId());
+       return resources.stream().map(ResourceMapper::mapToResourceDto).collect(Collectors.toList());
+    }
+
+    private Resource getResource(long id){
+        return resourceRepo.findByResourceId(id)
+                 .orElseThrow(()-> new RuntimeException("Resource not found"));
+     }
+
+
 }
