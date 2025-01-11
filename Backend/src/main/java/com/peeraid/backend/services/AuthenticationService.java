@@ -3,7 +3,6 @@ package com.peeraid.backend.services;
 import com.peeraid.backend.Repository.UserRepository;
 import com.peeraid.backend.dto.LoginUserDto;
 import com.peeraid.backend.dto.RegisterUserDto;
-import com.peeraid.backend.dto.UserDto;
 import com.peeraid.backend.dto.VerifyUserDto;
 import com.peeraid.backend.models.User;
 import jakarta.mail.MessagingException;
@@ -12,12 +11,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class AuthenticationService {
@@ -34,7 +30,7 @@ public class AuthenticationService {
     }
 
     public String signUp(RegisterUserDto input) {
-        long startTime = System.currentTimeMillis();
+
       Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
 
         if (optionalUser.isPresent()) {
@@ -42,18 +38,11 @@ public class AuthenticationService {
         }
 
             User user = new User(input.getName(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
-            long startTime2 = System.currentTimeMillis();
             user.setVerificationCode(generateVerificationCode());
-            long endTime2 = System.currentTimeMillis();
-        System.out.println("Time taken in code generation: " + (endTime2 - startTime2));
             user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
-            long startTime3 = System.currentTimeMillis();
             sendVerificationEmail(user);
-            long endTime3 = System.currentTimeMillis();
-        System.out.println("Time taken in sendVerificationEmail: " + (endTime3 - startTime3));
             userRepository.save(user);
-            long endTime = System.currentTimeMillis();
-        System.out.println("Time taken: " + (endTime - startTime));
+
             return "User created";
     }
 

@@ -1,5 +1,6 @@
 package com.peeraid.backend.Repository;
 
+import com.peeraid.backend.models.User;
 import com.peeraid.backend.models.UserRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,9 +14,7 @@ import java.util.Optional;
 public interface UserRequestRepo extends JpaRepository<UserRequest,Long> {
     Optional<UserRequest> findByRequestId(long requestID);
 
-   @Query("select ur from UserRequest ur where ur.lender.userId == :lenderId")
-    List<UserRequest> findAllByLender(@Param("lenderId") long lenderId);
+    List<UserRequest> findAllByLender(User lender);
 
-    @Query("select ur from UserRequest ur where ur.borrower.userId == :borrowerId")
-    List<UserRequest> findAllByBorrower(@Param("borrowerId") long borrowerId);
+    List<UserRequest> findAllByBorrower(User borrower);
 }

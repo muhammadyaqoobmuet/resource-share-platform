@@ -20,6 +20,7 @@ public class EmailService {
     }
 
 
+    @Async
     public void sendVerificationEmail(String to, String subject, String text) throws MessagingException {
 
         MimeMessage message = mailSender.createMimeMessage();
