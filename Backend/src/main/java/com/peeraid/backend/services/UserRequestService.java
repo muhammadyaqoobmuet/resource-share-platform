@@ -80,16 +80,15 @@ public class UserRequestService {
 
     public List<UserRequestDto> getRequestsReceived(){
        User user =  Utill.getCurrentUser();
-        List<UserRequest> userRequests = userRequestRepo.findAllByLender(user)
-                .orElse(new ArrayList<>());
+        List<UserRequest> userRequests = userRequestRepo.findAllByLender(user.getUserId());
 
       return  userRequests.stream().map(UserRequestMapper::mapToUserRequestDto).collect(Collectors.toList()) ;
     }
 
     public List<UserRequestDto> getRequestsSent(){
         User user =  Utill.getCurrentUser();
-        List<UserRequest> userRequests = userRequestRepo.findAllByBorrower(user)
-                .orElse(new ArrayList<>());
+        List<UserRequest> userRequests = userRequestRepo.findAllByBorrower(user.getUserId());
+
 
         return  userRequests.stream().map(UserRequestMapper::mapToUserRequestDto).collect(Collectors.toList()) ;
     }
