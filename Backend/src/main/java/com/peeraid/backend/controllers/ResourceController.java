@@ -65,7 +65,7 @@ public class ResourceController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getResourceById(@PathVariable("id") long id) {
         try {
-        return new ResponseEntity<>(resourceService.getResourcesById(id),HttpStatus.FOUND);
+        return new ResponseEntity<>(resourceService.getResourcesById(id),HttpStatus.OK);
 
         }catch (RuntimeException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
