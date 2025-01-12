@@ -6,7 +6,6 @@ import com.peeraid.backend.dto.UserRequestDto;
 import com.peeraid.backend.mapper.UserRequestMapper;
 import com.peeraid.backend.models.*;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
