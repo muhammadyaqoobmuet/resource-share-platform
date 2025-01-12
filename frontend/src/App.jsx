@@ -10,25 +10,22 @@ import LandingPage from "./components/LandingPage";
 import PrivateRoute from "./routes/PrivateRoute";
 import VerifyOTP from "./components/VerifyOTP";
 import Footer from "./components/Footer";
+import UploadResource from './components/UploadResource';
+import PrivateUpload from './routes/ProtectedUpload';
+import MyPosts from './components/MyPosts';
+import PrivatePosts from './routes/PrivatePosts';
+
 
 
 
 function App() {
-  const { isAuthenticated, isVerified, } = useAuthStore();
+  const { isAuthenticated, isVerified, user } = useAuthStore();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // If already authenticated, redirect to Dashboard or Verify
-    if (isAuthenticated) {
-      if (isVerified) {
-        
-        navigate('/dashboard');
-      } else {
-        navigate('/verify');
-      }
-    }
-  }, [isAuthenticated, isVerified, navigate]);
 
+  useEffect(() => {
+    console.log(user?.id);
+  }, [user])
   return (
     <>
       <ToastContainer />
@@ -37,12 +34,26 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
         <Route path="/signup" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Signup />} />
+        <Route path="/upload" element={
+          <PrivateUpload>
+            <UploadResource />
+          </PrivateUpload>
+        } />
+        <Route path="/my-posts" element={
+          <PrivatePosts>
+            <MyPosts />
+          </PrivatePosts>
+        } />
+
+
+
         <Route path="/verify" element={<VerifyOTP />} />
         <Route path="/dashboard" element={
           <PrivateRoute>
             <Dashboard />
           </PrivateRoute>
         } />
+
       </Routes>
       <Footer />
     </>

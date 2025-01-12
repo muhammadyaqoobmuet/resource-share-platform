@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import useAuthStore from '@/store/authStore';
 import { Link } from 'react-router-dom';
+import ResourceList from './ResourceList';
 
 const Dashboard = () => {
     const { user, isAuthenticated, isVerified, getUser } = useAuthStore();
@@ -23,8 +24,8 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="bg-white shadow-lg rounded-lg max-w-md w-full p-6">
+        <div className=" min-h-screen bg-gray-100">
+            {/* <div className="bg-white shadow-lg rounded-lg max-w-md w-full p-6">
                 <h1 className="text-2xl font-bold text-gray-800 mb-4">
                     Welcome to your Dashboard, {user?.name}
                 </h1>
@@ -50,7 +51,8 @@ const Dashboard = () => {
                         Logout
                     </Link>
                 </div>
-            </div>
+            </div> */}
+            <ResourceList />
         </div>
 
     );

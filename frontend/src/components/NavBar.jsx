@@ -22,7 +22,7 @@ function NavBar() {
   return (
     <>
       {/* Main NavBar */}
-      <div className="w-full bg-white/90 border-b-2 sticky top-0">
+      <div className="w-full z-50 bg-white/90 border-b-2 sticky top-0">
         <nav className="p-6 flex justify-between items-center max-w-[1350px] mx-auto">
           <div
             className="text-xl font-bold cursor-pointer"
@@ -66,7 +66,7 @@ function NavBar() {
                     Upload
                   </Button>
                   <Button
-                    onClick={() => navigate("/myposts")}
+                    onClick={() => navigate("/my-posts")}
                     className="text-black bg-transparent hover:bg-black hover:text-white"
                   >
                     My Posts
@@ -117,7 +117,7 @@ function NavBar() {
             onClick={() => navigate("/upload")}
             className=" w-full flex items-center px-4 bg-white text-[#171717] shadow-md border hover:bg-slate-100 hover:scale-105 ease-in   py-3 rounded-md"
           >
-            <MailIcon className="left-10 absolute"  />
+            <MailIcon className="left-10 absolute" />
             My Posts
           </Button>
           <Button

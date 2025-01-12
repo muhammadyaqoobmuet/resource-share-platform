@@ -16,7 +16,18 @@ const useAuthStore = create((set) => ({
     isVerified: isVerified,
     isLoading: false,
     error: null,
+    isModalOpen: false,
 
+
+    openModal: () => {
+        set({ isModalOpen: true })
+    },
+    closeModal: () => {
+        set({ isModalOpen: false })
+    },
+
+
+    // reaaming other methods
     // Save token and user data to localStorage
     saveToken: (token, expiresIn, user) => {
         localStorage.setItem("authToken", token);
@@ -102,6 +113,86 @@ const useAuthStore = create((set) => ({
         useAuthStore.getState().clearToken();
         set({ isAuthenticated: false, isVerified: false, user: null });
     },
+
+    isUploading: false,
+    uploadMessage: "",
+
+    upload: async (formData) => {
+        try {
+            set({ isUploading: true, uploadMessage: "" });
+
+            const response = await axiosInstance.post("/resource/create", formData);
+            set({
+                uploadMessage: "File uploaded successfully!",
+                isUploading: false,
+            });
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || "Upload failed!";
+            set({
+                uploadMessage: errorMessage,
+                isUploading: false,
+            });
+        }
+    },
+
+
+    isUpdating: false,
+    updatingMessage: "",
+
+    // Assuming the updateData function inside authStore is like this:
+    updateData: async (formData) => {
+        try {
+            set({ isUpdating: true, updatingMessage: "" });
+
+            // Make PUT request with formData
+            const response = await axiosInstance.put(`/resource/update`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data", // Ensure the correct header
+                }
+            });
+            set({
+                updatingMessage: "Resource updated successfully!",
+                isUpdating: false,
+            });
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || "Update failed!";
+            set({
+                updatingMessage: errorMessage,
+                isUpdating: false,
+            });
+        }
+    },
+
+
+
+
+    fetchResources: async () => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axiosInstance.get("/resource/");
+            set({ resources: response.data, isLoading: false });
+        } catch (error) {
+            set({ isLoading: false, error: error.response?.data?.message || error.message });
+            throw new Error(error.response?.data?.message || "Failed to fetch resources");
+        }
+    },
+
+    deleteProduct: async (id) => {
+        set({ isLoading: true, error: null });
+        try {
+            // Make the request to delete the resource from the server
+            const response = await axiosInstance.delete(`/resource/delete/${id}`);
+
+            // Return the updated list of resources after deletion (assuming the response contains the updated resources list)
+            set({ resources: response.data, isLoading: false });
+        } catch (error) {
+            set({ isLoading: false, error: error.response?.data?.message || error.message });
+            throw new Error(error.response?.data?.message || "Failed to delete resource");
+        }
+    }
+
+
+
 }));
 
 export default useAuthStore;
