@@ -2,22 +2,24 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
-import axios from "axios";
+import useAuthStore from "@/store/authStore"; // Import Zustand store
 import { useNavigate } from "react-router-dom";
 
 function VerifyOTP() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
+
+    // Destructure required values and methods from Zustand store
+    const { verify, isLoading, error } = useAuthStore();
+
     const onSubmit = async (data) => {
         try {
-            const response = await axios.post("http://localhost:8080/auth/verify", data);
-            toast.success(response.data + " login now ");
-            if (response.data) {
-                navigate('/dashboard')
-            }
-        } catch (error) {
-            toast.error("Verification failed. Please try again.");
-            console.error("Verification Error:", error.response?.data || error.message);
+            await verify(data); // Call verify method from Zustand store
+            toast.success("Verification successful! Login now.");
+            navigate("/dashboard");
+        } catch (err) {
+            toast.error(err.message || "Verification failed. Please try again.");
+            console.error("Verification Error:", err.response?.data || err.message);
         }
     };
 
@@ -46,7 +48,13 @@ function VerifyOTP() {
                         />
                         {errors.verificationCode && <p className="text-red-600">{errors.verificationCode.message}</p>}
                     </div>
-                    <Button type="submit" className="w-full py-2 bg-blue-600 text-white">Verify</Button>
+                    <Button
+                        type="submit"
+                        className={`w-full py-2 bg-blue-600 text-white ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                        disabled={isLoading} // Disable button while loading
+                    >
+                        {isLoading ? "Verifying..." : "Verify"}
+                    </Button>
                 </form>
             </div>
         </div>

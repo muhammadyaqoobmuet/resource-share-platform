@@ -1,69 +1,61 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+// Dashboard.js
+import React, { useEffect, useState } from 'react';
+import useAuthStore from '@/store/authStore';
+import { Link } from 'react-router-dom';
+import ResourceList from './ResourceList';
 
-function Dashboard() {
-    const navigate = useNavigate();
-
-    // Check if the user is authenticated
+const Dashboard = () => {
+    const { user, isAuthenticated, isVerified, getUser } = useAuthStore();
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            toast.error("Please login to access the dashboard.");
-            navigate("/login"); // Redirect to login if token doesn't exist
+        console.log('Authenticated:', isAuthenticated);
+        console.log('Verified:', isVerified);
+
+        if (isAuthenticated && isVerified) {
+            setLoading(false);
+            getUser()
+        } else {
+            window.location.href = '/login';
         }
-    }, [navigate]);
+    }, [isAuthenticated, isVerified]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div className="flex flex-col items-center justify-center bg-gray-100 p-6">
-            <h2 className="text-3xl font-semibold mb-6">Welcome to the Dashboard</h2>
-
-            {/* Cards for Borrow, Donate, Rent */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-4xl">
-                {/* Borrow Card */}
-                <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-                    <img
-                        src="https://via.placeholder.com/400x250"
-                        alt="Borrow"
-                        className="w-full h-48 object-cover"
-                    />
-                    <div className="p-4">
-                        <h3 className="text-xl font-semibold">Borrow</h3>
-                        <p className="text-gray-600">Browse items available for borrowing. Choose what you need.</p>
-                        <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg">Explore</button>
-                    </div>
+        <div className=" min-h-screen bg-gray-100">
+            {/* <div className="bg-white shadow-lg rounded-lg max-w-md w-full p-6">
+                <h1 className="text-2xl font-bold text-gray-800 mb-4">
+                    Welcome to your Dashboard, {user?.name}
+                </h1>
+                <div className="border-b border-gray-200 pb-4 mb-4">
+                    <p className="text-gray-600 text-sm mb-2">
+                        <span className="font-medium">Email:</span> {user?.email}
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                        <span className="font-medium">Account Created:</span> {new Date(user?.createdAt).toLocaleDateString()}
+                    </p>
                 </div>
-
-                {/* Donate Card */}
-                <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-                    <img
-                        src="https://via.placeholder.com/400x250"
-                        alt="Donate"
-                        className="w-full h-48 object-cover"
-                    />
-                    <div className="p-4">
-                        <h3 className="text-xl font-semibold">Donate</h3>
-                        <p className="text-gray-600">Help others by donating items you no longer need.</p>
-                        <button className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg">Donate Now</button>
-                    </div>
+                <div className="flex space-x-4">
+                    <Link
+                        to="/settings"
+                        className="flex-1 text-center bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors"
+                    >
+                        Edit Profile
+                    </Link>
+                    <Link
+                        to="/logout"
+                        className="flex-1 text-center bg-red-500 hover:bg-red-600 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors"
+                    >
+                        Logout
+                    </Link>
                 </div>
-
-                {/* Rent Card */}
-                <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-                    <img
-                        src="https://via.placeholder.com/400x250"
-                        alt="Rent"
-                        className="w-full h-48 object-cover"
-                    />
-                    <div className="p-4">
-                        <h3 className="text-xl font-semibold">Rent</h3>
-                        <p className="text-gray-600">Find items available for rent. Rent what you need for a short time.</p>
-                        <button className="mt-4 px-4 py-2 bg-yellow-600 text-white rounded-lg">Rent Now</button>
-                    </div>
-                </div>
-            </div>
+            </div> */}
+            <ResourceList />
         </div>
+
     );
-}
+};
 
 export default Dashboard;
