@@ -14,11 +14,18 @@ import UploadResource from './components/UploadResource';
 import PrivateUpload from './routes/ProtectedUpload';
 import MyPosts from './components/MyPosts';
 import PrivatePosts from './routes/PrivatePosts';
-
+import ResourceDetailPage from './components/ResourceDetailPage';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { QrCode } from 'lucide-react';
+import { ReactQueryDevtools, ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
+import TableUI from './components/SentRequest';
+import SentRequest from './components/SentRequest';
+import RequestHave from './components/RequestHave';
 
 
 
 function App() {
+  const queryClient = new QueryClient()
   const { isAuthenticated, isVerified, user } = useAuthStore();
   const navigate = useNavigate();
 
@@ -28,34 +35,43 @@ function App() {
   }, [user])
   return (
     <>
-      <ToastContainer />
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
-        <Route path="/signup" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Signup />} />
-        <Route path="/upload" element={
-          <PrivateUpload>
-            <UploadResource />
-          </PrivateUpload>
-        } />
-        <Route path="/my-posts" element={
-          <PrivatePosts>
-            <MyPosts />
-          </PrivatePosts>
-        } />
+      <QueryClientProvider client={queryClient}>
+
+        <ToastContainer />
+        <NavBar />
+        <Routes>
+          <Route path="/sent-request" element={<SentRequest />} />
+          <Route path="/requests" element={<RequestHave />} />
+          <Route path="/resource/:id" element={<ResourceDetailPage />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
+          <Route path="/signup" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Signup />} />
+          <Route path="/upload" element={
+            <PrivateUpload>
+              <UploadResource />
+            </PrivateUpload>
+          } />
+          <Route path="/my-posts" element={
+            <PrivatePosts>
+              <MyPosts />
+            </PrivatePosts>
+          } />
 
 
 
-        <Route path="/verify" element={<VerifyOTP />} />
-        <Route path="/dashboard" element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        } />
+          <Route path="/verify" element={<VerifyOTP />} />
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } />
 
-      </Routes>
-      <Footer />
+        </Routes>
+        <Footer />
+        {/* dev tool in reactqurey add that  */}
+        <ReactQueryDevtools initialIsOpen={true} />
+
+      </QueryClientProvider>
     </>
   );
 }

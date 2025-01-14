@@ -37,7 +37,7 @@ public class UserController {
     public ResponseEntity<UserDto>getUserById(@PathVariable("id") long id) {
         try {
         UserDto user = userService.getUserById(id);
-        return new  ResponseEntity<>(user, HttpStatus.FOUND);
+        return new  ResponseEntity<>(user, HttpStatus.OK);
 
         }catch (RuntimeException e){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);

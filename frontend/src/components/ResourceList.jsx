@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAuthStore from "@/store/authStore";
 import { toast } from "react-toastify";
 import { Loader } from "lucide-react";
 import EditForm from "./EditForm";
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 const ResourceList = () => {
-    const { fetchResources, resources, user, deleteProduct, isLoading } = useAuthStore();
+    const { fetchResources, resources, user, deleteProduct, isLoading  } = useAuthStore();
     const [activeMenu, setActiveMenu] = useState(null);
     const [localLoading, setLocalLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedResource, setSelectedResource] = useState(null);
 
     useEffect(() => {
+        console.log(resources);
         const loadResources = async () => {
             try {
                 await fetchResources();
@@ -32,7 +34,12 @@ const ResourceList = () => {
         setSelectedResource(resource);
         setIsModalOpen(true);
     };
-
+    const navigate = useNavigate()
+    const goToMain = (id) => {
+        if (id) {
+            navigate(`/resource/${id}`)
+        }
+    }
     const handleDelete = async (id) => {
         try {
             await deleteProduct(id);
@@ -69,8 +76,9 @@ const ResourceList = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {resources.map((resource, index) => (
                         <motion.div
+
                             key={resource.id}
-                            className="bg-white rounded-lg my-4 mx-2 overflow-hidden shadow-md"
+                            className="bg-white rounded-lg  my-4 mx-2 overflow-hidden shadow-md "
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3, delay: index * 0.1 }}
@@ -96,7 +104,7 @@ const ResourceList = () => {
                                 <AnimatePresence>
                                     {activeMenu === resource.id && (
                                         <motion.div
-                                            className="absolute top-12 right-3 w-40 bg-white border rounded-md shadow-lg z-10"
+                                            className="absolute top-12 right-3 w-40 bg-white border rounded-md shadow-lg z-10 "
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.8 }}
@@ -121,9 +129,13 @@ const ResourceList = () => {
                             <div className="p-4">
                                 <h2 className="text-xl font-semibold mb-2">{resource.name}</h2>
                                 <p className="text-gray-600 text-sm mb-3">{resource.description}</p>
+
                                 <p className="text-sm text-gray-500">Resource Type: {resource.resourceType}</p>
                             </div>
-                            <Button className="w-full my-2">{resource.resourceType == "LEND" ? "Borrow" : "Get"}</Button>
+                            <Button onClick={() => goToMain(resource.id)} disabled={!resource.available}
+                                className={`${resource.available ? "bg-green-950 " : "bg-gray-500"}  w-full my-2`}>
+                                {resource.available ? "Available" : "Not available"}
+                            </Button>
                         </motion.div>
                     ))}
                 </div>
