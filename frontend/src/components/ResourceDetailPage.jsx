@@ -87,7 +87,8 @@ const ResourceDetailPage = () => {
 
             toast.success('Request Sent')
 
-            navigate('/sent-request')
+            navigate('/dashboard')
+            await setTimeout(() => toast.success('check list page'), 1000)
             console.log("Request Sent")
         } catch (error) {
             console.error(error)
