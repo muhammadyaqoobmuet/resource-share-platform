@@ -8,7 +8,7 @@ import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 
 const ResourceList = () => {
-    const { fetchResources, resources, user, deleteProduct, isLoading  } = useAuthStore();
+    const { fetchResources, resources, user, deleteProduct, isLoading } = useAuthStore();
     const [activeMenu, setActiveMenu] = useState(null);
     const [localLoading, setLocalLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,6 +44,7 @@ const ResourceList = () => {
         try {
             await deleteProduct(id);
             toast.success("Resource deleted successfully");
+            window.location.reload()
         } catch (error) {
             console.error(error);
             toast.error("Failed to delete resource");
