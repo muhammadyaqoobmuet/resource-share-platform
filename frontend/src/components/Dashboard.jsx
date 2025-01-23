@@ -1,17 +1,21 @@
 // Dashboard.js
 import React, { useEffect, useState } from 'react';
 import useAuthStore from '@/store/authStore';
-import { Link } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import ResourceList from './ResourceList';
+import { Users } from 'lucide-react';
 
 const Dashboard = () => {
     const { user, isAuthenticated, isVerified, getUser } = useAuthStore();
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         console.log('Authenticated:', isAuthenticated);
         console.log('Verified:', isVerified);
 
         if (isAuthenticated && isVerified) {
+            console.log("here");
+            redirect('/dashboard');
             setLoading(false);
             getUser()
         } else {
