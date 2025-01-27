@@ -33,7 +33,7 @@ public class UserRequestsController {
     @PutMapping("/approve")
     public ResponseEntity<?> approveRequest(@RequestBody UserRequestDto userRequestDto) {
         try {
-            System.out.println(userRequestDto);
+
             userRequestService.acceptRequest(userRequestDto.getId());
             borrowRecordService.createBorrowRecord(userRequestDto.getId(),userRequestDto.getReturnDate());
             return ResponseEntity.ok().build();
