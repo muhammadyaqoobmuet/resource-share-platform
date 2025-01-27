@@ -1,7 +1,7 @@
 package com.peeraid.backend.services;
 
 import com.peeraid.backend.Repository.ResourceRepo;
-import com.peeraid.backend.dto.CreateResourceDto;
+import com.peeraid.backend.Request.CreateResourceRequest;
 import com.peeraid.backend.dto.ResourceDto;
 import com.peeraid.backend.mapper.ResourceMapper;
 import com.peeraid.backend.models.Image;
@@ -26,9 +26,9 @@ public class ResourceService {
         this.cloudinaryService = cloudinaryService;
     }
 
-    public void createResource(CreateResourceDto createResourceDto, MultipartFile file) throws IOException {
+    public void createResource(CreateResourceRequest createResourceRequest, MultipartFile file) throws IOException {
         Image image =  cloudinaryService.uploadImage(file);
-        Resource resource = ResourceMapper.mapToResource(createResourceDto);
+        Resource resource = ResourceMapper.mapToResource(createResourceRequest);
         resource.setUser(Utill.getCurrentUser());
         resource.setImageUrl(image.getUrl());
         resource.setImagePublicId(image.getPublicID());

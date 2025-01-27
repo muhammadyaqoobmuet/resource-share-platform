@@ -1,6 +1,6 @@
 package com.peeraid.backend.mapper;
 
-import com.peeraid.backend.dto.CreateResourceDto;
+import com.peeraid.backend.Request.CreateResourceRequest;
 import com.peeraid.backend.dto.ResourceDto;
 import com.peeraid.backend.models.ResourceCategory;
 import com.peeraid.backend.models.Resource;
@@ -21,12 +21,12 @@ public class ResourceMapper {
                 resource.getDateCreated()
         );
     }
-    public static  Resource mapToResource(CreateResourceDto createResourceDto) {
-        ResourceCategory resourceCategory = ResourceCategory.valueOf(createResourceDto.getCategory());
-        ResourceType resourceType = ResourceType.valueOf(createResourceDto.getResourceType());
-        return new Resource(createResourceDto.getName(),
+    public static  Resource mapToResource(CreateResourceRequest createResourceRequest) {
+        ResourceCategory resourceCategory = ResourceCategory.valueOf(createResourceRequest.getCategory());
+        ResourceType resourceType = ResourceType.valueOf(createResourceRequest.getResourceType());
+        return new Resource(createResourceRequest.getName(),
                 resourceCategory,
-                createResourceDto.getDescription(),
+                createResourceRequest.getDescription(),
                 resourceType);
 
     }

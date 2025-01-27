@@ -1,5 +1,6 @@
 package com.peeraid.backend.Repository;
 
+import com.peeraid.backend.models.Resource;
 import com.peeraid.backend.models.User;
 import com.peeraid.backend.models.UserRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,6 @@ public interface UserRequestRepo extends JpaRepository<UserRequest,Long> {
     List<UserRequest> findAllByLender(User lender);
 
     List<UserRequest> findAllByBorrower(User borrower);
+
+    Optional<UserRequest>findByBorrowerAndResource(User user, Resource resource);
 }

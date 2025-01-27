@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
-public class BorrowRecord {
+public class TransactionRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -35,10 +35,14 @@ public class BorrowRecord {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate returnDate;
 
-    public BorrowRecord() {
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus status = TransactionStatus.Active;
+
+    public TransactionRecord() {
     }
 
-    public BorrowRecord(Resource borrowedResource, User lender, User borrower, LocalDate returnDate) {
+    public TransactionRecord(Resource borrowedResource, User lender, User borrower, LocalDate returnDate) {
         this.borrowedResource = borrowedResource;
         this.lender = lender;
         this.borrower = borrower;

@@ -1,11 +1,11 @@
-package com.peeraid.backend.dto;
+package com.peeraid.backend.Request;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateResourceDto {
+public class CreateResourceRequest {
     private String name;
     private String description;
     private String category;

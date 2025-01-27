@@ -6,6 +6,8 @@ import com.peeraid.backend.dto.UserRequestDto;
 import com.peeraid.backend.mapper.UserRequestMapper;
 import com.peeraid.backend.models.*;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +22,7 @@ public class UserRequestService {
         this.userRequestRepo = userRequestRepo;
     }
 
-    public String sendRequest(long resourceId){
+    public String sendRequest(long resourceId, LocalDate returnDate){
         Resource requestResource = resourceRepo.findByResourceId(resourceId)
                 .orElseThrow(()->new IllegalArgumentException("Resource not found"));
         if (!requestResource.getAvailable()){
@@ -29,11 +31,15 @@ public class UserRequestService {
         if (requestResource.getUser().getUserId() == Utill.getCurrentUser().getUserId()){
             throw new IllegalStateException("Invalid request");
         }
+        if(userRequestRepo.findByBorrowerAndResource(Utill.getCurrentUser(),requestResource).isPresent()){
+            throw new IllegalStateException("Request already Sent");
+        }
 
             UserRequest userRequest = new UserRequest(
                     Utill.getCurrentUser(),
                     requestResource.getUser(),
-                    requestResource
+                    requestResource,
+                    returnDate
             );
 
             userRequestRepo.save(userRequest);
@@ -43,13 +49,13 @@ public class UserRequestService {
 
     public void acceptRequest(long requestId){
         UserRequest userRequest = getUserRequest(requestId);
-        if (userRequest.getLender().getUserId() == Utill.getCurrentUser().getUserId() ){
-        Resource requestResource = userRequest.getResource();
-            if (requestResource.getAvailable()){
-             requestResource.setAvailable(false);
-             userRequest.setRequestStatus(RequestStatus.ACCEPTED);
-             resourceRepo.save(requestResource);
-             userRequestRepo.save(userRequest);
+        if (userRequest.getLender().getUserId() == Utill.getCurrentUser().getUserId() ) {
+            Resource requestResource = userRequest.getResource();
+            if (requestResource.getAvailable()) {
+                requestResource.setAvailable(false);
+                userRequest.setRequestStatus(RequestStatus.ACCEPTED);
+                resourceRepo.save(requestResource);
+                userRequestRepo.save(userRequest);
             }
         }
 
@@ -61,7 +67,7 @@ public class UserRequestService {
                 userRequest.setRequestStatus(RequestStatus.DECLINED);
                 userRequestRepo.save(userRequest);
             }else {
-                throw new IllegalStateException("Request Already Approved");
+                throw new IllegalStateException("Invalid Request");
             }
         }else {
             throw new IllegalStateException("You are not Authorized for this request");
@@ -83,6 +89,10 @@ public class UserRequestService {
 
       return  userRequests.stream().map(UserRequestMapper::mapToUserRequestDto).collect(Collectors.toList()) ;
     }
+
+
+
+
 
     public List<UserRequestDto> getRequestsSent(){
         User user =  Utill.getCurrentUser();

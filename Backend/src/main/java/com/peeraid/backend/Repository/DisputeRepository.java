@@ -1,13 +1,10 @@
 package com.peeraid.backend.Repository;
 
-import com.peeraid.backend.models.BorrowRecord;
+import com.peeraid.backend.models.Dispute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface BorrowRecordRepo extends JpaRepository<BorrowRecord, Long> {
-
+public interface DisputeRepository extends JpaRepository<Dispute,Long> {
 
 }

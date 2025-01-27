@@ -36,13 +36,18 @@ public class UserRequest {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate requestDate = LocalDate.now();
 
+    @Column(nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy")
+    private LocalDate returnDate;
+
     public UserRequest() {
     }
 
-    public UserRequest(User borrower, User lender, Resource resource) {
+    public UserRequest(User borrower, User lender, Resource resource,LocalDate returnDate) {
         this.borrower = borrower;
         this.lender = lender;
         this.resource = resource;
+        this.returnDate = returnDate;
     }
 
 }

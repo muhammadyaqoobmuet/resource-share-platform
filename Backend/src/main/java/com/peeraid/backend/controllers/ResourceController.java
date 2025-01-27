@@ -1,6 +1,6 @@
 package com.peeraid.backend.controllers;
 
-import com.peeraid.backend.dto.CreateResourceDto;
+import com.peeraid.backend.Request.CreateResourceRequest;
 import com.peeraid.backend.dto.ResourceDto;
 import com.peeraid.backend.services.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class ResourceController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createResource(@RequestPart CreateResourceDto resource, @RequestPart MultipartFile image) {
+    public ResponseEntity<String> createResource(@RequestPart CreateResourceRequest resource, @RequestPart MultipartFile image) {
         try {
             resourceService.createResource(resource,image);
             return new ResponseEntity<>("Resource Created", HttpStatus.CREATED);

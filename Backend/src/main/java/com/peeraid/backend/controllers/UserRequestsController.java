@@ -1,30 +1,35 @@
 package com.peeraid.backend.controllers;
 
+import com.peeraid.backend.Request.CreateRequestBody;
 import com.peeraid.backend.dto.UserRequestDto;
-import com.peeraid.backend.services.BorrowRecordService;
+import com.peeraid.backend.services.TransactionRecordService;
 import com.peeraid.backend.services.UserRequestService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 
 @Controller
 @RequestMapping("/request")
 public class UserRequestsController {
     UserRequestService userRequestService;
-    BorrowRecordService borrowRecordService;
+    TransactionRecordService transactionRecordService;
 
-    public UserRequestsController(UserRequestService userRequestService, BorrowRecordService borrowRecordService) {
+    public UserRequestsController(UserRequestService userRequestService, TransactionRecordService transactionRecordService) {
         this.userRequestService = userRequestService;
-        this.borrowRecordService = borrowRecordService;
+        this.transactionRecordService = transactionRecordService;
 
     }
 
-    @PostMapping("/create/{id}")
-    public ResponseEntity<?> createUserRequest(@PathVariable long id) {
+    @PostMapping("/create")
+    public ResponseEntity<?> createUserRequest(@RequestBody CreateRequestBody createRequestBody){
         try {
-        return ResponseEntity.ok(userRequestService.sendRequest(id));
+        return ResponseEntity.ok(userRequestService.sendRequest(createRequestBody.getResourceId(),
+                    createRequestBody.getReturnDate()));
 
         }catch (IllegalStateException e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -35,7 +40,7 @@ public class UserRequestsController {
         try {
 
             userRequestService.acceptRequest(userRequestDto.getId());
-            borrowRecordService.createBorrowRecord(userRequestDto.getId(),userRequestDto.getReturnDate());
+            transactionRecordService.createTransactionRecord(userRequestDto.getId(),userRequestDto.getReturnDate());
             return ResponseEntity.ok().build();
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

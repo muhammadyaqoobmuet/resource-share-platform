@@ -1,9 +1,9 @@
 package com.peeraid.backend.services;
 
 import com.peeraid.backend.Repository.UserRepository;
-import com.peeraid.backend.dto.LoginUserDto;
-import com.peeraid.backend.dto.RegisterUserDto;
-import com.peeraid.backend.dto.VerifyUserDto;
+import com.peeraid.backend.Request.LoginRequest;
+import com.peeraid.backend.Request.SignUpRequest;
+import com.peeraid.backend.Request.VerifyUserRequest;
 import com.peeraid.backend.models.User;
 import jakarta.mail.MessagingException;
 import org.springframework.scheduling.annotation.Async;
@@ -29,7 +29,7 @@ public class AuthenticationService {
         this.emailService = emailService;
     }
 
-    public String signUp(RegisterUserDto input) {
+    public String signUp(SignUpRequest input) {
 
       Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
 
@@ -46,7 +46,7 @@ public class AuthenticationService {
             return "User created";
     }
 
-    public User authenticate(LoginUserDto input) {
+    public User authenticate(LoginRequest input) {
         User user = userRepository.findByEmail(input.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid Credentials"));
 
@@ -62,7 +62,7 @@ public class AuthenticationService {
         return user;
     }
 
-    public void verifyUser(VerifyUserDto input) {
+    public void verifyUser(VerifyUserRequest input) {
 
         Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
 
