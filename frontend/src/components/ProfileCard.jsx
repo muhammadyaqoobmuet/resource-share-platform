@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import useAuthStore from '@/store/authStore';
-import {   Menu  } from 'lucide-react';
+import { Menu } from 'lucide-react';
 
 
 
@@ -25,11 +25,7 @@ const ProfileCard = () => {
     return (
         <div className="flex items-center space-x-4 px-2 bg-white  rounded-lg max-w-sm mx-auto">
             {/* Profile Image */}
-            <img
-                src="https://via.placeholder.com/150"
-                alt="Profile"
-                className="w-8 h-8 rounded-full"
-            />
+            <div className='w-10 h-8 bg-gray-800 text-white text-xl font-bold text-center px-2 content-center cursor-pointer rounded-full'>{user?.name.split('')[0]}</div>
 
             {/* Name and Dropdown */}
             <div className="flex gap-2 justify-between w-full items-center ">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useAuthStore from "@/store/authStore";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const UploadResource = () => {
     const [file, setFile] = useState(null);
@@ -11,6 +12,7 @@ const UploadResource = () => {
 
     const { isUploading, upload, uploadMessage } = useAuthStore();
 
+    const navigate = useNavigate()
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
@@ -32,9 +34,14 @@ const UploadResource = () => {
 
         try {
             await upload(formData);
+            console.log('upload message', uploadMessage);
             if (uploadMessage) {
                 toast.success(uploadMessage);
+                navigate('/dashboard');
             }
+            toast.success("Resource uploaded successfully!");
+            navigate('/dashboard');
+
         } catch (error) {
             console.log(error);
         }

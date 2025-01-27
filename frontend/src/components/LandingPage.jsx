@@ -5,10 +5,20 @@ import { Timeline } from './Timeline'
 import { InputWithButton } from './ui/InputWithButton'
 import { motion } from "framer-motion"
 import { useNavigate } from 'react-router-dom';
+import useAuthStore from '@/store/authStore';
 
 function LandingPage() {
     const navigate = useNavigate();
+    const { user, isAuthenticated, isVerified, getUser } = useAuthStore();
 
+    useEffect(() => {
+        console.log('Authenticated:', isAuthenticated);
+        console.log('Verified:', isVerified);
+        console.log('User:', user);
+        if (isAuthenticated && isVerified) {
+            navigate('/dashboard')
+        }
+    }, [])
 
     return (
         <div>

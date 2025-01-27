@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import useAuthStore from "@/store/authStore";
 import { toast } from "react-toastify";
 import { Loader } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 
 const MyPosts = () => {
     const { fetchResources, resources, user, deleteProduct, isLoading } = useAuthStore();
     const [activeMenu, setActiveMenu] = useState(null);
     const [localLoading, setLocalLoading] = useState(true);
-
+    const navigate = useNavigate()
     useEffect(() => {
         const loadResources = async () => {
             try {
@@ -32,8 +33,11 @@ const MyPosts = () => {
     const handleDelete = async (id) => {
         try {
             await deleteProduct(id);
-            window.location.reload();
             toast.success("Post deleted successfully");
+
+            navigate('/dashboard')
+            window.location.reload()
+
         } catch (error) {
             console.error(error);
             toast.error("Failed to delete post");

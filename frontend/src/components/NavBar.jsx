@@ -71,6 +71,18 @@ function NavBar() {
                   >
                     My Posts
                   </Button>
+                  <Button
+                    onClick={() => navigate("/requests")}
+                    className="text-black bg-transparent hover:bg-black hover:text-white"
+                  >
+                      Received Requests
+                  </Button>
+                  <Button
+                    onClick={() => navigate("/sent-request")}
+                    className="text-black bg-transparent hover:bg-black hover:text-white"
+                  >
+                      Sent Requests
+                  </Button>
                   {/* <Button
                     onClick={handleLogout}
                     className="text-black bg-transparent hover:bg-red-900 hover:text-white"

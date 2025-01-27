@@ -11,6 +11,8 @@ const user = null;
 const useAuthStore = create((set) => ({
     token: localStorage.getItem("authToken") || null,
     user: user || null,
+
+    postCreatedBy:'',
     expiresIn: localStorage.getItem("authExpiresIn") || null,
     isAuthenticated: isAuthenticated,
     isVerified: isVerified,
@@ -25,6 +27,8 @@ const useAuthStore = create((set) => ({
     closeModal: () => {
         set({ isModalOpen: false })
     },
+
+  
 
 
     // reaaming other methods
@@ -170,12 +174,13 @@ const useAuthStore = create((set) => ({
         set({ isLoading: true, error: null });
         try {
             const response = await axiosInstance.get("/resource/");
-            set({ resources: response.data, isLoading: false });
+            set({  resources: response.data, isLoading: false });
         } catch (error) {
             set({ isLoading: false, error: error.response?.data?.message || error.message });
             throw new Error(error.response?.data?.message || "Failed to fetch resources");
         }
     },
+
 
     deleteProduct: async (id) => {
         set({ isLoading: true, error: null });
