@@ -13,5 +13,5 @@ public class DonationRecordController {
         this.donationRecordService = donationRecordService;
     }
 
-    public ResponseEntity<>getDonationRecord
+
 }

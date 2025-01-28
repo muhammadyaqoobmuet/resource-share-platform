@@ -12,6 +12,7 @@ public class TransactionRecordDto {
     private UserDto lender;
     private UserDto borrower;
     private ResourceDto resource;
+    private String transactionStatus;
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -19,11 +20,12 @@ public class TransactionRecordDto {
 
     }
 
-    public TransactionRecordDto(long id, UserDto lender, UserDto borrower, ResourceDto resource, LocalDate startDate, LocalDate endDate) {
+    public TransactionRecordDto(long id, UserDto lender, UserDto borrower, ResourceDto resource,String transactionStatus, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.lender = lender;
         this.borrower = borrower;
         this.resource = resource;
+        this.transactionStatus = transactionStatus;
         this.startDate = startDate;
         this.endDate = endDate;
     }

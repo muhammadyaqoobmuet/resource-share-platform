@@ -11,6 +11,7 @@ public class TransactionRecordMapper {
                 UserMapper.mapToUserDto(transactionRecord.getLender()),
                 UserMapper.mapToUserDto(transactionRecord.getBorrower()),
                 ResourceMapper.mapToResourceDto(transactionRecord.getBorrowedResource()),
+                transactionRecord.getStatus().toString(),
                 transactionRecord.getBorrowDate(),
                 transactionRecord.getReturnDate()
         );
