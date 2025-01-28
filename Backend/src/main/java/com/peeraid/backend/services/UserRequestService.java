@@ -66,15 +66,16 @@ public class UserRequestService {
             Resource requestResource = userRequest.getResource();
             if (requestResource.isAvailable()) {
                 userRequest.setRequestStatus(RequestStatus.ACCEPTED);
-                resourceRepo.save(requestResource);
                 userRequestRepo.save(userRequest);
             }
             if (userRequest.getRequestType().equals(RequestType.BORROW)) {
                 transactionRecordService.createTransactionRecord(userRequest, returnDate);
                 requestResource.setResourceStatus(ResourceStatus.BORROWED);
+                resourceRepo.save(requestResource);
             } else {
                 donationRecordService.createDonationRecord(userRequest);
                 requestResource.setResourceStatus(ResourceStatus.DONATED);
+                resourceRepo.save(requestResource);
             }
 
         }

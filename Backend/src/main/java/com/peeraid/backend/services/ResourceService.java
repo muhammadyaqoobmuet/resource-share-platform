@@ -4,7 +4,6 @@ import com.peeraid.backend.Repository.ResourceRepo;
 import com.peeraid.backend.Request.CreateResourceRequest;
 import com.peeraid.backend.dto.ResourceDto;
 import com.peeraid.backend.mapper.ResourceMapper;
-import com.peeraid.backend.models.enums.Image;
 import com.peeraid.backend.models.enums.Resource;
 import com.peeraid.backend.models.enums.User;
 import org.springframework.scheduling.annotation.Async;
@@ -14,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,10 +28,11 @@ public class ResourceService {
 
     public void createResource(CreateResourceRequest createResourceRequest, MultipartFile file) throws IOException {
         Resource resource = ResourceMapper.mapToResource(createResourceRequest);
+        imageUpload(file,resource);//upload image asynchronously
         resource.setUser(Utill.getCurrentUser());
         resourceRepo.save(resource);
 
-        imageUpload(file,resource);
+
     }
 
 
@@ -50,8 +49,8 @@ public class ResourceService {
 
         if (resource.getUser().getUserId() == Utill.getCurrentUser().getUserId()){
             resource =    ResourceMapper.mapToResource(resourceDto,resource);
-            resourceRepo.save(resource);
             imageUpdate(file,resource);
+            resourceRepo.save(resource);
         }else {
         throw new AccessDeniedException("You do not have permission to update this resource");
         }
@@ -61,39 +60,31 @@ public class ResourceService {
     }
     @Async
     protected void imageUpload(MultipartFile file, Resource resource) throws IOException {
-        CompletableFuture<Image> imageFuture = cloudinaryService.uploadImage(file);
-
-        imageFuture.thenAccept(image -> {
+        cloudinaryService.uploadImage(file).thenAccept(image -> {
             resource.setImageUrl(image.getUrl());
             resource.setImagePublicId(image.getPublicID());
-            resourceRepo.save(resource);
+            resourceRepo.save(resource); // Save the resource after updating its image details
+        }).exceptionally(ex -> {
+            System.err.println("Error during image upload: " + ex.getMessage());
+            return null;
         });
     }
-
     @Async
-    public void imageUpdate(MultipartFile file, Resource resource) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                if (resource.getImagePublicId() == null || resource.getImagePublicId().isEmpty()) {
-                    try {
-                        imageUpload(file, resource);
-                    } catch (IOException e) {
-                        throw new RuntimeException("Error uploading image: " + e.getMessage(), e);
-                    }
-                    return; // Exit after uploading a new image
-                }
+    public void imageUpdate(MultipartFile file, Resource resource) throws IOException {
+        if (resource.getImagePublicId() == null || resource.getImagePublicId().isEmpty()) {
+            // If no public ID exists, treat it as a new upload
+            imageUpload(file, resource);
+            return;
+        }
 
-                // Update image if publicId is not empty
-                CompletableFuture<String> urlFuture = cloudinaryService.updateImage(file, resource.getImagePublicId());
-
-                urlFuture.thenAccept(url -> {
-                    resource.setImageUrl(url); // Update the resource with the new URL
-                    resourceRepo.save(resource); // Save the updated resource to the repository
+        cloudinaryService.updateImage(file, resource.getImagePublicId())
+                .thenAccept(url -> {
+                    resource.setImageUrl(url);
+                    resourceRepo.save(resource); // Save the updated resource
+                }).exceptionally(ex -> {
+                    System.err.println("Error during image update: " + ex.getMessage());
+                    return null;
                 });
-            } catch (Exception e) {
-                throw new RuntimeException("Unexpected error during image update: " + e.getMessage(), e);
-            }
-        });
     }
 
     @Async
