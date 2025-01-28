@@ -2,11 +2,10 @@ package com.peeraid.backend.services;
 
 import com.peeraid.backend.Repository.ResourceRepo;
 import com.peeraid.backend.Repository.TransactionRecordRepo;
-import com.peeraid.backend.Repository.UserRequestRepo;
 import com.peeraid.backend.Request.DisputeBody;
 import com.peeraid.backend.mapper.TransactionRecordMapper;
-import com.peeraid.backend.models.*;
 import com.peeraid.backend.dto.TransactionRecordDto;
+import com.peeraid.backend.models.enums.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -19,26 +18,17 @@ import java.util.stream.Collectors;
 public class TransactionRecordService {
 
     private final TransactionRecordRepo transactionRecordRepository;
-    private final UserRequestRepo requestRepository;
     private final ResourceRepo resourceRepo;
     private  final DisputeService disputeService;
     public TransactionRecordService(TransactionRecordRepo transactionRecordRepository,
-                                    UserRequestRepo requestRepository,
                                     ResourceRepo resourceRepo,
                                     DisputeService disputeService) {
         this.transactionRecordRepository = transactionRecordRepository;
-        this.requestRepository = requestRepository;
         this.resourceRepo = resourceRepo;
         this.disputeService = disputeService;
     }
 
-    public void createTransactionRecord(Long requestId, LocalDate returnDate) {
-       UserRequest request = requestRepository.findById(requestId)
-                .orElseThrow(() -> new IllegalArgumentException("Request not found"));
-
-        if (!request.getRequestStatus().equals(RequestStatus.ACCEPTED)) {
-            throw new IllegalStateException("Request must be approved to create a borrow record");
-        }
+    public void createTransactionRecord(UserRequest request, LocalDate returnDate) {
 
         TransactionRecord transactionRecord = new TransactionRecord(
                 request.getResource(),
@@ -77,7 +67,7 @@ public class TransactionRecordService {
             record.setStatus(TransactionStatus.Completed);
             Resource resource = resourceRepo.findByResourceId(record.getBorrowedResource().getResourceId())
                     .orElseThrow(() -> new IllegalArgumentException("Resource not found"));
-            resource.setAvailable(true);
+            resource.setResourceStatus(ResourceStatus.AVAILABLE);
             resourceRepo.save(resource);
             transactionRecordRepository.save(record);
             return "Return Confirmed";
@@ -97,6 +87,9 @@ public class TransactionRecordService {
       }
 
         transactionRecord.setStatus(TransactionStatus.Disputed);
+        Resource resource = transactionRecord.getBorrowedResource();
+        resource.setResourceStatus(ResourceStatus.UNAVAILABLE);
+        resourceRepo.save(resource);
         disputeService.createDispute(disputeBody,transactionRecord);
       return "Report has been submitted";
     }

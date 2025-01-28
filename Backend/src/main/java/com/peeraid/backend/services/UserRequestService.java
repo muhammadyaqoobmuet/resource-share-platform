@@ -4,7 +4,7 @@ import com.peeraid.backend.Repository.ResourceRepo;
 import com.peeraid.backend.Repository.UserRequestRepo;
 import com.peeraid.backend.dto.UserRequestDto;
 import com.peeraid.backend.mapper.UserRequestMapper;
-import com.peeraid.backend.models.*;
+import com.peeraid.backend.models.enums.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,10 +14,14 @@ import java.util.stream.Collectors;
 @Service
 public class UserRequestService {
 
-   ResourceRepo resourceRepo;
+    TransactionRecordService transactionRecordService;
+    DonationRecordService donationRecordService;
+    ResourceRepo resourceRepo;
     UserRequestRepo userRequestRepo;
 
-    public UserRequestService(ResourceRepo resourceRepo, UserRequestRepo userRequestRepo) {
+    public UserRequestService(TransactionRecordService transactionRecordService, DonationRecordService donationRecordService, ResourceRepo resourceRepo, UserRequestRepo userRequestRepo) {
+        this.transactionRecordService = transactionRecordService;
+        this.donationRecordService = donationRecordService;
         this.resourceRepo = resourceRepo;
         this.userRequestRepo = userRequestRepo;
     }
@@ -25,7 +29,7 @@ public class UserRequestService {
     public String sendRequest(long resourceId, LocalDate returnDate){
         Resource requestResource = resourceRepo.findByResourceId(resourceId)
                 .orElseThrow(()->new IllegalArgumentException("Resource not found"));
-        if (!requestResource.getAvailable()){
+        if (!requestResource.isAvailable()){
             throw new IllegalStateException("Resource not available");
         }
         if (requestResource.getUser().getUserId() == Utill.getCurrentUser().getUserId()){
@@ -34,11 +38,19 @@ public class UserRequestService {
         if(userRequestRepo.findByBorrowerAndResource(Utill.getCurrentUser(),requestResource).isPresent()){
             throw new IllegalStateException("Request already Sent");
         }
+        RequestType requestType ;
+         if (requestResource.getResourceType().equals(ResourceType.LEND)){
+             requestType = RequestType.BORROW;
+         }else {
+             requestType = RequestType.DONATION;
+         }
+
 
             UserRequest userRequest = new UserRequest(
                     Utill.getCurrentUser(),
                     requestResource.getUser(),
                     requestResource,
+                    requestType,
                     returnDate
             );
 
@@ -47,16 +59,24 @@ public class UserRequestService {
 
     }
 
-    public void acceptRequest(long requestId){
+    public void acceptRequest(long requestId,LocalDate returnDate) {
         UserRequest userRequest = getUserRequest(requestId);
-        if (userRequest.getLender().getUserId() == Utill.getCurrentUser().getUserId() ) {
+
+        if (userRequest.getLender().getUserId() == Utill.getCurrentUser().getUserId()) {
             Resource requestResource = userRequest.getResource();
-            if (requestResource.getAvailable()) {
-                requestResource.setAvailable(false);
+            if (requestResource.isAvailable()) {
                 userRequest.setRequestStatus(RequestStatus.ACCEPTED);
                 resourceRepo.save(requestResource);
                 userRequestRepo.save(userRequest);
             }
+            if (userRequest.getRequestType().equals(RequestType.BORROW)) {
+                transactionRecordService.createTransactionRecord(userRequest, returnDate);
+                requestResource.setResourceStatus(ResourceStatus.BORROWED);
+            } else {
+                donationRecordService.createDonationRecord(userRequest);
+                requestResource.setResourceStatus(ResourceStatus.DONATED);
+            }
+
         }
 
     }

@@ -1,7 +1,7 @@
 package com.peeraid.backend.mapper;
 
 import com.peeraid.backend.dto.UserRequestDto;
-import com.peeraid.backend.models.UserRequest;
+import com.peeraid.backend.models.enums.UserRequest;
 
 public class UserRequestMapper {
    public static UserRequestDto mapToUserRequestDto(UserRequest userRequest) {
@@ -11,7 +11,9 @@ public class UserRequestMapper {
                UserMapper.mapToUserDto(userRequest.getLender()),
                UserMapper.mapToUserDto(userRequest.getBorrower()),
                userRequest.getRequestStatus().toString(),
-               userRequest.getRequestDate()
+               userRequest.getRequestType().toString(),
+               userRequest.getRequestDate(),
+               userRequest.getReturnDate()
        );
    }
 }

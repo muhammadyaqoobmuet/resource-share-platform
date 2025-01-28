@@ -2,9 +2,9 @@ package com.peeraid.backend.mapper;
 
 import com.peeraid.backend.Request.CreateResourceRequest;
 import com.peeraid.backend.dto.ResourceDto;
-import com.peeraid.backend.models.ResourceCategory;
-import com.peeraid.backend.models.Resource;
-import com.peeraid.backend.models.ResourceType;
+import com.peeraid.backend.models.enums.ResourceCategory;
+import com.peeraid.backend.models.enums.Resource;
+import com.peeraid.backend.models.enums.ResourceType;
 
 public class ResourceMapper {
 
@@ -17,7 +17,7 @@ public class ResourceMapper {
                 resource.getResourceType().toString(),
                 resource.getImageUrl(),
                 resource.getUser().getUserId(),
-                resource.getAvailable(),
+                resource.getResourceStatus().toString(),
                 resource.getDateCreated()
         );
     }

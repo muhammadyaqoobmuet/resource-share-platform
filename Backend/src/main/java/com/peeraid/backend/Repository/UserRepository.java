@@ -1,7 +1,7 @@
 package com.peeraid.backend.Repository;
 
 
-import com.peeraid.backend.models.User;
+import com.peeraid.backend.models.enums.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

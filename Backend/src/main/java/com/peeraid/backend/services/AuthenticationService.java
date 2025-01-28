@@ -4,7 +4,7 @@ import com.peeraid.backend.Repository.UserRepository;
 import com.peeraid.backend.Request.LoginRequest;
 import com.peeraid.backend.Request.SignUpRequest;
 import com.peeraid.backend.Request.VerifyUserRequest;
-import com.peeraid.backend.models.User;
+import com.peeraid.backend.models.enums.User;
 import jakarta.mail.MessagingException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -17,7 +17,7 @@ public class ResourceController {
 
     ResourceService resourceService;
 
-    @Autowired
+
     public ResourceController(ResourceService resourceService) {
         this.resourceService = resourceService;
     }

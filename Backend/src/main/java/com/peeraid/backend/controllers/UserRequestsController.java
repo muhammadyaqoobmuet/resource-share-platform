@@ -2,26 +2,22 @@ package com.peeraid.backend.controllers;
 
 import com.peeraid.backend.Request.CreateRequestBody;
 import com.peeraid.backend.dto.UserRequestDto;
-import com.peeraid.backend.services.TransactionRecordService;
 import com.peeraid.backend.services.UserRequestService;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 
 
 @Controller
 @RequestMapping("/request")
 public class UserRequestsController {
     UserRequestService userRequestService;
-    TransactionRecordService transactionRecordService;
 
-    public UserRequestsController(UserRequestService userRequestService, TransactionRecordService transactionRecordService) {
+
+    public UserRequestsController(UserRequestService userRequestService) {
         this.userRequestService = userRequestService;
-        this.transactionRecordService = transactionRecordService;
 
     }
 
@@ -39,8 +35,7 @@ public class UserRequestsController {
     public ResponseEntity<?> approveRequest(@RequestBody UserRequestDto userRequestDto) {
         try {
 
-            userRequestService.acceptRequest(userRequestDto.getId());
-            transactionRecordService.createTransactionRecord(userRequestDto.getId(),userRequestDto.getReturnDate());
+            userRequestService.acceptRequest(userRequestDto.getId(),userRequestDto.getReturnDate());
             return ResponseEntity.ok().build();
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

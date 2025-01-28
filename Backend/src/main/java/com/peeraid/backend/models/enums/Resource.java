@@ -1,11 +1,12 @@
-package com.peeraid.backend.models;
+package com.peeraid.backend.models.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 @Entity
 @Getter
@@ -34,22 +35,21 @@ public class Resource {
     @Column(length = 200)
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Boolean available = true;
+    private ResourceStatus resourceStatus = ResourceStatus.AVAILABLE;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     private ResourceType resourceType;
 
-    @Column(nullable = false)
     private String imageUrl;
 
-    @Column(nullable = false)
     private String imagePublicId;
 
     @Column(nullable = false, updatable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private LocalDateTime dateCreated = LocalDateTime.now();
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate dateCreated = LocalDate.now();
 
     public Resource() {
     }
@@ -65,6 +65,9 @@ public class Resource {
         this.resourceType = resourceType;
     }
 
+   public boolean isAvailable(){
+        return resourceStatus.equals(ResourceStatus.AVAILABLE);
+    }
 
 
 }

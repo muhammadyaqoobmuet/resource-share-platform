@@ -19,7 +19,7 @@ public class ResourceDto {
     private String resourceType;
     private String imageUrl;
     private long userId;
-    private boolean available;
-    private LocalDateTime dateAdded;
+    private String status;
+    private LocalDate dateAdded;
 
 }

@@ -4,15 +4,17 @@ import com.peeraid.backend.Repository.ResourceRepo;
 import com.peeraid.backend.Request.CreateResourceRequest;
 import com.peeraid.backend.dto.ResourceDto;
 import com.peeraid.backend.mapper.ResourceMapper;
-import com.peeraid.backend.models.Image;
-import com.peeraid.backend.models.Resource;
-import com.peeraid.backend.models.User;
+import com.peeraid.backend.models.enums.Image;
+import com.peeraid.backend.models.enums.Resource;
+import com.peeraid.backend.models.enums.User;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,14 +29,14 @@ public class ResourceService {
     }
 
     public void createResource(CreateResourceRequest createResourceRequest, MultipartFile file) throws IOException {
-        Image image =  cloudinaryService.uploadImage(file);
         Resource resource = ResourceMapper.mapToResource(createResourceRequest);
         resource.setUser(Utill.getCurrentUser());
-        resource.setImageUrl(image.getUrl());
-        resource.setImagePublicId(image.getPublicID());
         resourceRepo.save(resource);
 
+        imageUpload(file,resource);
     }
+
+
     public List<ResourceDto> getResources() {
 
         List<Resource> resources = resourceRepo.findAllOrderByCreatedDateDesc();
@@ -47,10 +49,9 @@ public class ResourceService {
         Resource resource = getResource(resourceDto.getId());
 
         if (resource.getUser().getUserId() == Utill.getCurrentUser().getUserId()){
-          String url =   cloudinaryService.updateImage(file,resource.getImagePublicId());
             resource =    ResourceMapper.mapToResource(resourceDto,resource);
-            resource.setImageUrl(url);
             resourceRepo.save(resource);
+            imageUpdate(file,resource);
         }else {
         throw new AccessDeniedException("You do not have permission to update this resource");
         }
@@ -58,12 +59,53 @@ public class ResourceService {
             return "Updated Resource Successfully";
 
     }
+    @Async
+    protected void imageUpload(MultipartFile file, Resource resource) throws IOException {
+        CompletableFuture<Image> imageFuture = cloudinaryService.uploadImage(file);
+
+        imageFuture.thenAccept(image -> {
+            resource.setImageUrl(image.getUrl());
+            resource.setImagePublicId(image.getPublicID());
+            resourceRepo.save(resource);
+        });
+    }
+
+    @Async
+    public void imageUpdate(MultipartFile file, Resource resource) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                if (resource.getImagePublicId() == null || resource.getImagePublicId().isEmpty()) {
+                    try {
+                        imageUpload(file, resource);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error uploading image: " + e.getMessage(), e);
+                    }
+                    return; // Exit after uploading a new image
+                }
+
+                // Update image if publicId is not empty
+                CompletableFuture<String> urlFuture = cloudinaryService.updateImage(file, resource.getImagePublicId());
+
+                urlFuture.thenAccept(url -> {
+                    resource.setImageUrl(url); // Update the resource with the new URL
+                    resourceRepo.save(resource); // Save the updated resource to the repository
+                });
+            } catch (Exception e) {
+                throw new RuntimeException("Unexpected error during image update: " + e.getMessage(), e);
+            }
+        });
+    }
+
+    @Async
+    protected void deleteImage(String imagePublicId) throws IOException {
+        cloudinaryService.deleteImage(imagePublicId);
+    }
 
     public String deleteResource(long id) throws IOException {
         Resource resource = getResource(id);
         if (resource.getUser().getUserId() == Utill.getCurrentUser().getUserId()){
-            cloudinaryService.deleteImage(resource.getImagePublicId());
             resourceRepo.delete(resource);
+            deleteImage(resource.getImagePublicId());
         }else {
             throw  new AccessDeniedException("You do not have permission to delete this resource");
         }

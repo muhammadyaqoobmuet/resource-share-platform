@@ -1,7 +1,7 @@
 package com.peeraid.backend.mapper;
 
 import com.peeraid.backend.dto.UserDto;
-import com.peeraid.backend.models.User;
+import com.peeraid.backend.models.enums.User;
 
 public class UserMapper {
 

@@ -1,4 +1,4 @@
-package com.peeraid.backend.models;
+package com.peeraid.backend.models.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -31,7 +31,7 @@ public class TransactionRecord {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate borrowDate = LocalDate.now();
 
-    @Column(nullable = false)
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate returnDate;
 

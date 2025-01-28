@@ -1,4 +1,4 @@
-package com.peeraid.backend.models;
+package com.peeraid.backend.models.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

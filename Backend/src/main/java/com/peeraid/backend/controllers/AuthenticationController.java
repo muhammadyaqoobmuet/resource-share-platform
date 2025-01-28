@@ -4,7 +4,7 @@ package com.peeraid.backend.controllers;
 import com.peeraid.backend.Request.LoginRequest;
 import com.peeraid.backend.Request.SignUpRequest;
 import com.peeraid.backend.Request.VerifyUserRequest;
-import com.peeraid.backend.models.User;
+import com.peeraid.backend.models.enums.User;
 import com.peeraid.backend.responses.LoginResponse;
 import com.peeraid.backend.services.AuthenticationService;
 import com.peeraid.backend.services.JwtService;

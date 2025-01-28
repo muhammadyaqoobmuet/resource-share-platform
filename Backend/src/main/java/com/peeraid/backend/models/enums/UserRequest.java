@@ -1,4 +1,4 @@
-package com.peeraid.backend.models;
+package com.peeraid.backend.models.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -32,21 +32,24 @@ public class UserRequest {
     @Column(nullable = false, length = 20)
     private RequestStatus requestStatus = RequestStatus.PENDING;
 
+    @Enumerated(EnumType.STRING)
+    private RequestType requestType;
+
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate requestDate = LocalDate.now();
 
-    @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy")
     private LocalDate returnDate;
 
     public UserRequest() {
     }
 
-    public UserRequest(User borrower, User lender, Resource resource,LocalDate returnDate) {
+    public UserRequest(User borrower, User lender, Resource resource,RequestType type,LocalDate returnDate) {
         this.borrower = borrower;
         this.lender = lender;
         this.resource = resource;
+        this.requestType = type;
         this.returnDate = returnDate;
     }
 
