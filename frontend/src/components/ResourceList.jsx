@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAuthStore from "@/store/authStore";
 import { toast } from "react-toastify";
-import { Loader } from "lucide-react";
+import { Loader, Search } from "lucide-react";
 import EditForm from "./EditForm";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
+import GenralLoader from "./GenralLoader";
 
 const ResourceList = () => {
     const { fetchResources, resources, user, deleteProduct, isLoading } = useAuthStore();
@@ -13,6 +14,9 @@ const ResourceList = () => {
     const [localLoading, setLocalLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedResource, setSelectedResource] = useState(null);
+    const navigate = useNavigate()
+    const list = ["DONATED", "UNAVAILABLE"]
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         console.log(resources);
@@ -22,6 +26,7 @@ const ResourceList = () => {
             } catch (error) {
                 console.error("Failed to fetch resources:", error);
                 toast.error("Failed to load resources. Please try again.");
+
             } finally {
                 setLocalLoading(false);
             }
@@ -34,7 +39,7 @@ const ResourceList = () => {
         setSelectedResource(resource);
         setIsModalOpen(true);
     };
-    const navigate = useNavigate()
+
     const goToMain = (id) => {
         if (id) {
             navigate(`/resource/${id}`)
@@ -55,19 +60,45 @@ const ResourceList = () => {
         setActiveMenu(activeMenu === id ? null : id);
     };
 
+    // Dummy search method - you can replace this with actual search logic later
+    const handleSearch = (e) => {
+        setSearchQuery(e.target.value);
+        // You can implement actual search logic here
+        console.log("Searching for:", e.target.value);
+    };
+
     if (isLoading || localLoading) {
         return (
-            <div className="w-screen h-screen flex items-center justify-center" aria-live="polite" aria-busy="true">
-                <Loader className="animate-spin text-blue-600" size={64} />
-                <span className="sr-only">Loading resources...</span>
-            </div>
+            <GenralLoader />
         );
     }
 
     return (
         <div className="max-w-[1350px] mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold text-center text-blue-600 mb-2">Explore Resources</h1>
-            <p className="text-center text-gray-600 mb-8">Browse through the resources uploaded by other users.</p>
+            <div className="text-center mb-10">
+                <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                    Community Resources
+                </h1>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Discover and share resources with your community
+                </p>
+            </div>
+
+            {/* Modern Search Input */}
+            <div className="max-w-2xl mx-auto mb-12 ">
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <input
+                        type="text"
+                        placeholder="Search resources..."
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        className="w-full pl-10 pr-4 py-3 border border-gray-500 rounded-xl 
+                                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                 bg-white shadow-sm hover:border-gray-300 transition-colors"
+                    />
+                </div>
+            </div>
 
             {!Array.isArray(resources) || resources.length === 0 ? (
                 <div className="text-center text-gray-600 py-8">
@@ -133,9 +164,9 @@ const ResourceList = () => {
 
                                 <p className="text-sm text-gray-500">Resource Type: {resource.resourceType}</p>
                             </div>
-                            <Button onClick={() => goToMain(resource.id)} disabled={!resource.available}
-                                className={`${resource.available ? "bg-green-950 " : "bg-gray-500"}  w-full my-2`}>
-                                {resource.available ? "Available" : "Not available"}
+                            <Button onClick={() => goToMain(resource.id)} disabled={list.includes(resource.status)}
+                                className={`${resource.status ? "bg-green-950 " : "bg-gray-500"}  w-full my-2`}>
+                                {resource.status}
                             </Button>
                         </motion.div>
                     ))}

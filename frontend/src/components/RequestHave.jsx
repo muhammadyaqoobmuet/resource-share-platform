@@ -12,6 +12,8 @@ const RequestHave = () => {
         queryFn: () => axiosInstance.get("/request/receive").then((res) => res.data),
     });
 
+    console.log("requst got", data);
+
     // Mutation for approving a request
     const approveMutation = useMutation({
         mutationFn: (row) =>
@@ -68,7 +70,7 @@ const RequestHave = () => {
             </div>
 
             {/* Table Container */}
-            <div className="w-full max-w-[90%] mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
+            <div className="w-full  mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
                 <table className="min-w-full border-collapse text-left">
                     {/* Table Header */}
                     <thead className="bg-gray-200">
@@ -84,6 +86,9 @@ const RequestHave = () => {
                             </th>
                             <th className="px-10 py-4 text-gray-600 font-semibold text-sm">
                                 Date
+                            </th>
+                            <th className="px-10 py-4 text-gray-600 font-semibold text-sm">
+                                Return Date
                             </th>
                             <th className="px-6 py-4 text-gray-600 font-semibold text-sm text-center">
                                 Actions
@@ -112,8 +117,11 @@ const RequestHave = () => {
                                         {row.status}
                                     </span>
                                 </td>
-                                <td className="px-6 py-4 text-gray-700 border-b border-gray-300">
+                                <td className="px-6 py-3 text-gray-700 border-b border-gray-300">
                                     {row.requestDate}
+                                </td>
+                                <td className="px-6 py-4 text-gray-700 border-b border-gray-300">
+                                    {row.returnDate || "no date availe for now"}
                                 </td>
                                 <td className="px-6 py-4 border-b border-gray-300">
                                     <div className="flex justify-center gap-2">

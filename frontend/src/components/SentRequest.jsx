@@ -49,9 +49,9 @@ const SentRequest = () => {
         return <div>Error fetching data</div>;
     }
 
-    console.log(data);
+    console.log("in sent", data);
     return (
-        <div className="min-h-screen max-w-[2000px] mx-auto bg-gray-50 p-8">
+        <div className="min-h-screen  bg-gray-50 p-8">
             {/* Page Heading */}
             <div className="text-center mb-12">
                 <h1 className="text-5xl font-bold bg-clip-text text-[#0e1726]">Sent Request</h1>
@@ -59,7 +59,7 @@ const SentRequest = () => {
             </div>
 
             {/* Table Container */}
-            <div className="w-full max-w-[90%] mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
+            <div className="w-full  bg-white shadow-xl rounded-lg overflow-hidden">
                 <table className="min-w-full border-collapse text-left">
                     {/* Table Header */}
                     <thead className="bg-gray-200">
@@ -69,6 +69,7 @@ const SentRequest = () => {
                             <th className="px-6 py-4 text-gray-600 font-semibold text-sm">Lender</th>
                             <th className="px-10 py-4 text-gray-600 font-semibold text-sm">Status</th>
                             <th className="px-10 py-4 text-gray-600 font-semibold text-sm">Date</th>
+                            <th className="px-10 py-4 text-gray-600 font-semibold text-sm">Return Date</th>
                             <th className="px-6 py-4 text-gray-600 font-semibold text-sm text-center">Actions</th>
                         </tr>
                     </thead>
@@ -89,6 +90,7 @@ const SentRequest = () => {
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 text-gray-700 border-b border-gray-300">{row.requestDate}</td>
+                                <td className="px-6 py-4 text-gray-700 border-b border-gray-300">{row.returnDate}</td>
                                 <td className="px-6 py-4 border-b border-gray-300">
                                     <div className="flex justify-center gap-2">
                                         <Button

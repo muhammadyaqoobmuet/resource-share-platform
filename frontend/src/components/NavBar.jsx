@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button"; // Make sure this is imported correctly
 import useAuthStore from "@/store/authStore"; // Assuming you have a store to manage authentication
-import { Cross, EyeClosed, HammerIcon, LogOutIcon, MailIcon, MenuIcon, Plus, PoundSterling, Upload } from "lucide-react";
+import { LogOutIcon, MailIcon, MenuIcon, Upload, PoundSterling, ChevronDown } from "lucide-react";
 import ProfileCard from "./ProfileCard";
 
 function NavBar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for toggling the sidebar
+  const [showRequestsDropdown, setShowRequestsDropdown] = useState(false);
   const { isAuthenticated, logout } = useAuthStore();
   const navigate = useNavigate();
 
@@ -72,23 +73,49 @@ function NavBar() {
                     My Posts
                   </Button>
                   <Button
-                    onClick={() => navigate("/requests")}
+                    onClick={() => navigate("/transactions")}
                     className="text-black bg-transparent hover:bg-black hover:text-white"
                   >
-                      Received Requests
+                    Transactions
                   </Button>
-                  <Button
-                    onClick={() => navigate("/sent-request")}
-                    className="text-black bg-transparent hover:bg-black hover:text-white"
-                  >
-                      Sent Requests
-                  </Button>
-                  {/* <Button
-                    onClick={handleLogout}
-                    className="text-black bg-transparent hover:bg-red-900 hover:text-white"
-                  >
-                    Logout
-                  </Button> */}
+
+                  {/* Requests Dropdown */}
+                  <div className="relative">
+                    <Button
+                      onMouseEnter={() => setShowRequestsDropdown(true)}
+                      className="text-black bg-transparent hover:bg-black hover:text-white flex items-center gap-1"
+                    >
+                      Requests <ChevronDown className="h-4 w-4" />
+                    </Button>
+
+                    {/* Dropdown Menu */}
+                    {showRequestsDropdown && (
+                      <div
+                        onMouseEnter={() => setShowRequestsDropdown(true)}
+                        onMouseLeave={() => setShowRequestsDropdown(false)}
+                        className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
+                      >
+                        <button
+                          onClick={() => {
+                            navigate("/requests");
+                            setShowRequestsDropdown(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Received Requests
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate("/sent-request");
+                            setShowRequestsDropdown(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Sent Requests
+                        </button>
+                      </div>
+                    )}
+                  </div>
 
                   <ProfileCard />
                 </div>
@@ -126,15 +153,34 @@ function NavBar() {
             Upload
           </Button>
           <Button
-            onClick={() => navigate("/upload")}
+            onClick={() => navigate("/my-posts")}
             className=" w-full flex items-center px-4 bg-white text-[#171717] shadow-md border hover:bg-slate-100 hover:scale-105 ease-in   py-3 rounded-md"
           >
             <MailIcon className="left-10 absolute" />
             My Posts
           </Button>
           <Button
-            onClick={() => navigate("/upload")}
+            onClick={() => navigate("/transactions")}
             className=" w-full flex items-center px-4 bg-white text-[#171717] shadow-md border hover:bg-slate-100 hover:scale-105 ease-in   py-3 rounded-md"
+          >
+            <PoundSterling className="left-10 absolute" />
+            Transactions
+          </Button>
+          <Button
+            onClick={() => navigate("/requests")}
+            className="w-full flex items-center px-4 bg-white text-[#171717] shadow-md border hover:bg-slate-100 hover:scale-105 ease-in py-3 rounded-md"
+          >
+            Received Requests
+          </Button>
+          <Button
+            onClick={() => navigate("/sent-request")}
+            className="w-full flex items-center px-4 bg-white text-[#171717] shadow-md border hover:bg-slate-100 hover:scale-105 ease-in py-3 rounded-md"
+          >
+            Sent Requests
+          </Button>
+          <Button
+            onClick={handleLogout}
+            className="w-full flex items-center px-4 bg-white text-[#171717] shadow-md border hover:bg-slate-100 hover:scale-105 ease-in py-3 rounded-md"
           >
             <LogOutIcon className="left-10 absolute" />
             Logout

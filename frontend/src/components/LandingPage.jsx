@@ -3,13 +3,13 @@
 import { useEffect } from 'react';
 import { Timeline } from './Timeline'
 import { InputWithButton } from './ui/InputWithButton'
-import { motion } from "framer-motion"
+
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '@/store/authStore';
 
 function LandingPage() {
     const navigate = useNavigate();
-    const { user, isAuthenticated, isVerified, getUser } = useAuthStore();
+    const { user, isAuthenticated, isVerified } = useAuthStore();
 
     useEffect(() => {
         console.log('Authenticated:', isAuthenticated);
@@ -18,7 +18,7 @@ function LandingPage() {
         if (isAuthenticated && isVerified) {
             navigate('/dashboard')
         }
-    }, [])
+    }, [isAuthenticated, isVerified])
 
     return (
         <div>
