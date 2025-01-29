@@ -5,7 +5,7 @@ import { timelineSteps } from './timelineData';
 
 export function Timeline() {
   return (
-    <section className="py-24 md:py-32 bg-white">
+    <section className="py-24 md:py-32 bg-[#090909]">
       <div className="container px-4 mx-auto">
         <TimelineHeader />
         

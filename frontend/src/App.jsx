@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import useAuthStore from "./store/authStore";
 import NavBar from "@/components/NavBar";
@@ -26,6 +26,7 @@ import Transactions from './components/Transactions';
 
 
 function App() {
+  const location = useLocation()
   const queryClient = new QueryClient()
   const { isAuthenticated, user } = useAuthStore();
 
@@ -38,9 +39,15 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
 
+        {location.pathname !== "/" && <NavBar />}
         <ToastContainer />
-        <NavBar />
         <Routes>
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } />
+
 
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/sent-request" element={<SentRequest />} />
@@ -63,11 +70,7 @@ function App() {
 
 
           <Route path="/verify" element={<VerifyOTP />} />
-          <Route path="/dashboard" element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          } />
+
 
         </Routes>
         <Footer />

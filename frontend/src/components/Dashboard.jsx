@@ -26,7 +26,7 @@ const Dashboard = () => {
 
 
     return (
-        <div className=" min-h-screen bg-gray-100">
+        <div className=" min-h-screen bg-[#0d0d0d]">
             <Suspense fallback={GenralLoader}>
 
                 <ResourceList />

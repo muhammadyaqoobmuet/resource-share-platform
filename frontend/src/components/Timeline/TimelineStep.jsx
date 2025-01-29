@@ -18,10 +18,10 @@ export function TimelineStep({ title, description, icon: Icon, index, isLast }) 
       </div>
       
       <div className="pt-3 pb-8">
-        <h3 className="text-xl font-semibold mb-2 text-neutral-900">
+        <h3 className="text-xl font-semibold mb-2 text-white">
           {title}
         </h3>
-        <p className="text-neutral-600">
+        <p className="text-[#a7a6a6]">
           {description}
         </p>
       </div>

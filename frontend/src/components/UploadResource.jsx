@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import useAuthStore from "@/store/authStore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import { ArrowRight, Upload } from "lucide-react";
+import { motion } from "framer-motion";
 const UploadResource = () => {
     const [file, setFile] = useState(null);
     const [name, setName] = useState("");
@@ -48,95 +49,132 @@ const UploadResource = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-gray-100 text-gray-900">
-            <div className="bg-white/80 backdrop-blur-md shadow-xl rounded-3xl p-8 max-w-lg w-full border border-gray-300">
-                <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
-                    Upload Resource
-                </h2>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                        <label htmlFor="file" className="block text-sm font-medium text-gray-800 mb-2">
-                            Image:
+        <div className="min-h-[400px] flex items-center justify-center bg-[#0D0D0D] p-4 sm:p-10">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-[#0d0d0d]  shadow-2xl rounded-3xl p-8 max-w-2xl w-full border border-gray-700/30 relative overflow-hidden"
+            >
+                {/* Gradient Border Effect */}
+                {/* <div className="absolute inset-0 rounded-3xl p-px bg-gradient-to-br from-purple-500/20 to-blue-500/20 -m-px pointer-events-none" /> */}
+
+                <motion.h2
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-4xl font-bold text-center bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-8"
+                >
+                    Share Your Resource
+                </motion.h2>
+
+                <form onSubmit={handleSubmit} className="space-y-8">
+                    {/* File Upload */}
+                    <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        className="group relative"
+                    >
+                        <label className="block">
+                            <span className="text-gray-300 text-sm font-medium mb-2 block">Resource Image</span>
+                            <div className="flex items-center justify-center w-full h-32 border-2 border-dashed border-gray-700/50 rounded-2xl bg-gray-800/30 hover:border-purple-500/40 transition-all cursor-pointer">
+                                <div className="text-center">
+                                    <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2 group-hover:text-purple-400 transition-colors" />
+                                    <p className="text-gray-400 group-hover:text-gray-200 transition-colors">
+                                        {file ? file.name : 'Click to upload image'}
+                                    </p>
+                                </div>
+                                <input
+                                    type="file"
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                    required
+                                />
+                            </div>
                         </label>
-                        <input
-                            type="file"
-                            id="file"
-                            onChange={handleFileChange}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-white/30 backdrop-blur-md text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-gray-900 focus:outline-none"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-800 mb-2">
-                            Name:
-                        </label>
+                    </motion.div>
+
+                    {/* Name Input */}
+                    <div className="space-y-2">
+                        <label className="text-gray-300 text-sm font-medium">Resource Name</label>
                         <input
                             type="text"
-                            id="name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-white/30 backdrop-blur-md text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-gray-900 focus:outline-none"
-                            placeholder="Enter name"
+                            className="w-full px-5 py-3 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all"
+                            placeholder="Enter resource name"
                             required
                         />
                     </div>
-                    <div>
-                        <label htmlFor="description" className="block text-sm font-medium text-gray-800 mb-2">
-                            Description:
-                        </label>
-                        <input
-                            type="text"
-                            id="description"
+
+                    {/* Description Input */}
+                    <div className="space-y-2">
+                        <label className="text-gray-300 text-sm font-medium">Description</label>
+                        <textarea
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-white/30 backdrop-blur-md text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-gray-900 focus:outline-none"
-                            placeholder="Enter description"
+                            className="w-full px-5 py-3 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all h-32"
+                            placeholder="Describe your resource..."
                             required
                         />
                     </div>
-                    <div>
-                        <label htmlFor="category" className="block text-sm font-medium text-gray-800 mb-2">
-                            Category:
-                        </label>
-                        <select
-                            id="category"
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-white/30 backdrop-blur-md text-gray-800 focus:ring-2 focus:ring-gray-900 focus:outline-none"
-                        >
-                            <option value="BOOKS">Books</option>
-                            <option value="LAB_EQUIPMENT">Lab Equipment</option>
-                            <option value="ELECTRONICS">Electronics</option>
-                            <option value="STATIONERY">Stationery</option>
-                            <option value="MISCELLANEOUS">Miscellaneous</option>
-                        </select>
+
+                    {/* Category Select */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="text-gray-300 text-sm font-medium">Category</label>
+                            <div className="relative">
+                                <select
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                    className="w-full px-5 py-3 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-200 appearance-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all"
+                                >
+                                    <option value="BOOKS">Books</option>
+                                    <option value="LAB_EQUIPMENT">Lab Equipment</option>
+                                    <option value="ELECTRONICS">Electronics</option>
+                                    <option value="STATIONERY">Stationery</option>
+                                    <option value="MISCELLANEOUS">Miscellaneous</option>
+                                </select>
+                                <ArrowRight className="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2 transform rotate-90 pointer-events-none" />
+                            </div>
+                        </div>
+
+                        {/* Resource Type Select */}
+                        <div className="space-y-2">
+                            <label className="text-gray-300 text-sm font-medium">Resource Type</label>
+                            <div className="relative">
+                                <select
+                                    value={resourceType}
+                                    onChange={(e) => setResourceType(e.target.value)}
+                                    className="w-full px-5 py-3 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-200 appearance-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all"
+                                >
+                                    <option value="LEND">Lend</option>
+                                    <option value="DONATE">Donate</option>
+                                </select>
+                                <ArrowRight className="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2 transform rotate-90 pointer-events-none" />
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label htmlFor="resourceType" className="block text-sm font-medium text-gray-800 mb-2">
-                            Resource Type:
-                        </label>
-                        <select
-                            id="resourceType"
-                            value={resourceType}
-                            onChange={(e) => setResourceType(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-white/30 backdrop-blur-md text-gray-800 focus:ring-2 focus:ring-gray-900 focus:outline-none"
-                        >
-                            <option value="LEND">Lend</option>
-                            <option value="DONATE">Donate</option>
-                        </select>
-                    </div>
-                    <button
+
+                    {/* Submit Button */}
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         type="submit"
                         disabled={isUploading}
-                        className={`w-full px-4 py-2 rounded-lg font-bold text-white ${isUploading
-                            ? "bg-gray-600 cursor-not-allowed"
-                            : "bg-[#171717] hover:bg-[#333333]"
-                            } transition-colors duration-300`}
+                        className={`w-full py-4 rounded-xl font-bold transition-all ${isUploading
+                            ? "bg-gray-700/50 cursor-not-allowed"
+                            : "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg shadow-purple-500/20"
+                            }`}
                     >
-                        {isUploading ? "Uploading..." : "Upload"}
-                    </button>
+                        {isUploading ? (
+                            <div className="flex items-center justify-center space-x-2">
+                                <div className="w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin" />
+                                <span>Uploading...</span>
+                            </div>
+                        ) : (
+                            "Share Resource"
+                        )}
+                    </motion.button>
                 </form>
-            </div>
+            </motion.div>
         </div>
     );
 };

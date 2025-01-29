@@ -2,6 +2,7 @@ import useAuthStore from "@/store/authStore";
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import GenralLoader from "./GenralLoader";
 
 function Transactions() {
     const queryClient = useQueryClient();
@@ -71,14 +72,6 @@ function Transactions() {
             toast.error(error.response?.data || "Failed to decline return");
         }
     });
-
-    const statusStyles = {
-        PENDING: "bg-yellow-200 text-yellow-700",
-        ACTIVE: "bg-green-200 text-green-700",
-        DISPUTE: "bg-red-200 text-red-700",
-        COMPLETED: "bg-blue-200 text-blue-700"
-    };
-
     const handleReturn = (itemId) => {
         returnMutation.mutate(itemId);
     };
@@ -95,69 +88,69 @@ function Transactions() {
         });
     };
 
+    const statusStyles = {
+        Pending: "bg-gradient-to-r from-yellow-500/30 to-amber-500/20 text-amber-300 border border-amber-500/30",
+        Active: "bg-gradient-to-r from-green-500/30 to-emerald-500/20 text-emerald-300 border border-emerald-500/30",
+        Dispute: "bg-gradient-to-r from-red-500/30 to-rose-500/20 text-rose-300 border border-rose-500/30 animate-pulse",
+        Completed: "bg-gradient-to-r from-blue-500/30 to-cyan-500/20 text-cyan-300 border border-cyan-500/30",
+        PendingConfirmation: "bg-gradient-to-r from-purple-500/30 to-indigo-500/20 text-indigo-300 border border-indigo-500/30",
+        Disputed: "bg-gradient-to-r from-red-500/30 to-rose-500/20 text-rose-300 border border-rose-500/30 animate-pulse",
+        // Add any other status variations you might have
+    };
+
     if (borrowedLoading || lentLoading) {
-        return <div>Loading...</div>;
+        return <GenralLoader />;
     }
 
     return (
-        <div className="min-h-screen max-w-[2000px] mx-auto bg-gray-50 p-8">
+        <div className="min-h-screen max-w-[2000px] mx-auto bg-[#0a0a0a] p-6 sm:p-8 lg:p-12">
             {/* Page Heading */}
             <div className="text-center mb-12">
-                <h1 className="text-5xl font-bold bg-clip-text text-[#0e1726]">
-                    Transactions History
+                <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                    Transaction History
                 </h1>
-                <p className="mt-2 text-gray-600">
-                    Track your borrowed and lent items
+                <p className="mt-3 text-gray-400 text-sm sm:text-base max-w-2xl mx-auto">
+                    Track your resource sharing activities
                 </p>
             </div>
 
             {/* Borrowed Items Section */}
-            <div className="mb-12 max-w-[2000px] mx-auto">
-                <h2 className="text-2xl font-semibold mb-4 text-[#0e1726]">Items You Borrowed</h2>
-                <div className="max-w-[2000px] mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
-                    <table className="min-w-full border-collapse text-left">
-                        <thead className="bg-gray-200">
+            <div className="mb-12">
+                <h2 className="text-2xl font-semibold mb-6 text-gray-200">Borrowed Resources</h2>
+                <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-800 overflow-x-auto">
+                    <table className="w-full min-w-[800px]">
+                        <thead className="bg-gray-800/90">
                             <tr>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">Item</th>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">Lender</th>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">Start Date</th>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">End Date</th>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">Status</th>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">Actions</th>
+                                {["Item", "Lender", "Start Date", "End Date", "Status", "Actions"].map((header) => (
+                                    <th key={header} className="px-4 py-4 sm:px-6 sm:py-5 text-left text-sm font-medium text-gray-300">
+                                        {header}
+                                    </th>
+                                ))}
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-gray-800/50">
                             {borrowedItems?.map((item) => (
-                                <tr key={item.id} className="hover:bg-gray-100">
-                                    <td className="px-6 py-4 border-b">{item.resource.name}</td>
-                                    <td className="px-6 py-4 border-b">{item.lender.name}</td>
-                                    <td className="px-6 py-4 border-b">{item.startDate}</td>
-                                    <td className="px-6 py-4 border-b">{item.endDate}</td>
-                                    <td className="px-6 py-4 border-b">
-                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${statusStyles[item.transactionStatus]}`}>
+                                <tr key={item.id} className="hover:bg-gray-800/40 transition-colors">
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-200 font-medium">{item.resource.name}</td>
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-300">{item.lender.name}</td>
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-400">{item.startDate}</td>
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-400">{item.endDate}</td>
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4">
+                                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm text-white ${statusStyles[item.transactionStatus]}`}>
                                             {item.transactionStatus}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 border-b">
-
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4">
                                         <button
                                             onClick={() => handleReturn(item.id)}
-                                            className={` text-white px-4 py-2 
-                                            rounded-md text-sm font-medium transition-colors
-                                            ${item.transactionStatus == "PendingConfirmation" || item.transactionStatus == "Disputed" || item.transactionStatus == "Completed" ? "bg-gray-500 cursor-not-allowed " : "bg-blue-500 hover:bg-blue-600"}
-                                            `}
-                                            disabled={item.transactionStatus == "PendingConfirmation" || item.transactionStatus == "Disputed" || item.transactionStatus == "Completed"}
-
+                                            disabled={["PendingConfirmation", "DISPUTE", "COMPLETED"].includes(item.transactionStatus)}
+                                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${["PendingConfirmation", "DISPUTE", "COMPLETED"].includes(item.transactionStatus)
+                                                    ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
+                                                    : "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+                                                }`}
                                         >
-                                            {console.log("return item" + item.transactionStatus)}
                                             Return Item
                                         </button>
-
-                                        {item.transactionStatus == "DISPUTE" && (
-                                            <span className="text-red-500 text-sm">
-                                                Issue reported to admin
-                                            </span>
-                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -167,55 +160,50 @@ function Transactions() {
             </div>
 
             {/* Lent Items Section */}
-            <div className="max-w-[2000px] mx-auto">
-                <h2 className="text-2xl font-semibold mb-4 text-[#0e1726]">Items You Lent</h2>
-                <div className="w-full bg-white shadow-xl rounded-lg overflow-hidden">
-                    <table className="min-w-full border-collapse text-left">
-                        <thead className="bg-gray-200">
+            <div>
+                <h2 className="text-2xl font-semibold mb-6 text-gray-200">Lent Resources</h2>
+                <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-800 overflow-x-auto">
+                    <table className="w-full min-w-[800px]">
+                        <thead className="bg-gray-800/90">
                             <tr>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">Item</th>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">Borrower</th>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">Start Date</th>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">End Date</th>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">Status</th>
-                                <th className="px-6 py-4 text-gray-600 font-semibold text-sm">Actions</th>
+                                {["Item", "Borrower", "Start Date", "End Date", "Status", "Actions"].map((header) => (
+                                    <th key={header} className="px-4 py-4 sm:px-6 sm:py-5 text-left text-sm font-medium text-gray-300">
+                                        {header}
+                                    </th>
+                                ))}
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-gray-800/50">
                             {lentItems?.map((item) => (
-                                <tr key={item.id} className="hover:bg-gray-100">
-                                    <td className="px-6 py-4 border-b">{item.resource.name}</td>
-                                    <td className="px-6 py-4 border-b">{item.borrower.name}</td>
-                                    <td className="px-6 py-4 border-b">{item.startDate}</td>
-                                    <td className="px-6 py-4 border-b">{item.endDate}</td>
-                                    <td className="px-6 py-4 border-b">
-                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${statusStyles[item.transactionStatus]}`}>
+                                <tr key={item.id} className="hover:bg-gray-800/40 transition-colors">
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-200 font-medium">{item.resource.name}</td>
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-300">{item.borrower.name}</td>
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-400">{item.startDate}</td>
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-400">{item.endDate}</td>
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4">
+                                        <span className={`inline-flex  text-white items-center px-3 py-1 rounded-full text-xs sm:text-sm ${statusStyles[item.transactionStatus]}`}>
                                             {item.transactionStatus}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 border-b">
-                                        {console.log(item.transactionStatus + "this is PendingConfirmation")}
-                                        {item?.transactionStatus == "PendingConfirmation" && (
-
-                                            <div className="flex gap-2 items-center">
+                                    <td className="px-4 py-3 sm:px-6 sm:py-4">
+                                        {item.transactionStatus === "PendingConfirmation" && (
+                                            <div className="flex gap-3">
                                                 <button
                                                     onClick={() => handleConfirmReturn(item.id)}
-                                                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                                                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all"
                                                 >
-                                                    Confirm Return
+                                                    Confirm
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeclineReturn(item.id)}
-                                                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                                                    className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all"
                                                 >
-                                                    Decline Return
+                                                    Decline
                                                 </button>
                                             </div>
                                         )}
                                         {item.transactionStatus === "DISPUTE" && (
-                                            <span className="text-red-500 text-sm">
-                                                Issue reported to admin
-                                            </span>
+                                            <span className="text-rose-400 text-sm">Under Review</span>
                                         )}
                                     </td>
                                 </tr>
@@ -224,7 +212,7 @@ function Transactions() {
                     </table>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }
 

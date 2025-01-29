@@ -13,7 +13,7 @@ export function TimelineFooter() {
       <Button
         variant="outline"
         size="lg"
-        className="group hover:bg-neutral-900 hover:text-white transition-all duration-300"
+        className="group  bg-white hover:border-white hover:bg-black hover:text-white   transition-all duration-300"
       >
         <span>Join the Community</span>
         <ArrowRightCircle className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
