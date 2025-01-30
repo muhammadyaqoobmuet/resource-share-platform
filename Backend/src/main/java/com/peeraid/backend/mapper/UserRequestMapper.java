@@ -1,7 +1,7 @@
 package com.peeraid.backend.mapper;
 
 import com.peeraid.backend.dto.UserRequestDto;
-import com.peeraid.backend.models.enums.UserRequest;
+import com.peeraid.backend.models.entity.UserRequest;
 
 public class UserRequestMapper {
    public static UserRequestDto mapToUserRequestDto(UserRequest userRequest) {

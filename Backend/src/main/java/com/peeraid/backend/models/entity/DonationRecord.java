@@ -1,4 +1,4 @@
-package com.peeraid.backend.models.enums;
+package com.peeraid.backend.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;

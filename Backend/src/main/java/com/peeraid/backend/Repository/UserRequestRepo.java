@@ -1,8 +1,8 @@
 package com.peeraid.backend.Repository;
 
-import com.peeraid.backend.models.enums.Resource;
-import com.peeraid.backend.models.enums.User;
-import com.peeraid.backend.models.enums.UserRequest;
+import com.peeraid.backend.models.entity.Resource;
+import com.peeraid.backend.models.entity.User;
+import com.peeraid.backend.models.entity.UserRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

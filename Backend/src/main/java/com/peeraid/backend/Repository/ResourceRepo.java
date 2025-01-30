@@ -1,6 +1,6 @@
 package com.peeraid.backend.Repository;
 
-import com.peeraid.backend.models.enums.Resource;
+import com.peeraid.backend.models.entity.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

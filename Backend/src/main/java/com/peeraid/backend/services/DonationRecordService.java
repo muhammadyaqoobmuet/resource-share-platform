@@ -1,8 +1,8 @@
 package com.peeraid.backend.services;
 
 import com.peeraid.backend.Repository.DonationRecordRepo;
-import com.peeraid.backend.models.enums.DonationRecord;
-import com.peeraid.backend.models.enums.UserRequest;
+import com.peeraid.backend.models.entity.DonationRecord;
+import com.peeraid.backend.models.entity.UserRequest;
 import org.springframework.stereotype.Service;
 
 @Service

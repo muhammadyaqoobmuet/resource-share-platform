@@ -1,6 +1,7 @@
-package com.peeraid.backend.models.enums;
+package com.peeraid.backend.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.peeraid.backend.models.enums.TransactionStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

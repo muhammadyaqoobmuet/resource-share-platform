@@ -1,6 +1,6 @@
 package com.peeraid.backend.services;
 
-import com.peeraid.backend.models.enums.User;
+import com.peeraid.backend.models.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
