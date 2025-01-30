@@ -1,33 +1,20 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
-import { useMutation, useQuery } from "@tanstack/react-query"; // React Query import
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-
+import { format } from "date-fns";
 import useAuthStore from "@/store/authStore";
-
 import { Button } from "./ui/button";
 import axiosInstance from "@/utils/axiosInstance";
 import { toast } from "react-toastify";
-
-
-
-// Function to fetch resource by ID
-
-
+import { Input } from "./ui/input";
+import { Loader } from "lucide-react";
 
 const fetchResourceById = async (id, token) => {
-
-
-
-    if (!token) {
-        throw new Error("No token found");
-    }
-
+    if (!token) throw new Error("No token found");
     try {
         const response = await axios.get(`http://localhost:8080/resource/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
     } catch (error) {
@@ -37,105 +24,171 @@ const fetchResourceById = async (id, token) => {
 };
 
 const ResourceDetailPage = () => {
-
-
-
-
+    const [returnDate, setReturnDate] = useState("");
     const navigate = useNavigate();
     const { token, user } = useAuthStore();
     const { id } = useParams();
+
     const { data: resource, isLoading, error, isError } = useQuery({
-        queryKey: ["resource", id],  // Key for caching
-        queryFn: () => fetchResourceById(id, token),  // Function to fetch data
+        queryKey: ["resource", id],
+        queryFn: () => fetchResourceById(id, token),
     });
 
     const mutation = useMutation({
-        mutationFn: async (id) => {
-            return axiosInstance.post(`request/create/${id}`)
+        mutationFn: async ({ resourceId, returnDate }) => {
+            return axiosInstance.post(`request/create`, {
+                resourceId,
+                returnDate: format(new Date(returnDate), "dd-MM-yyyy")
+            });
+        },
+        onSuccess: () => {
+            toast.success('Request Sent');
+            setTimeout(() => navigate('/dashboard'), 2000);
+        },
+        onError: (error) => {
+            toast.error(`Failed to send request: ${error.message}`);
         }
-    })
-    console.log(resource);  // i get this
-    const userId = resource?.userId;
-    console.log(resource?.userId); // i get 2
+    });
 
+    const userId = resource?.userId;
     const userStatus = useQuery({
         queryKey: ["user", userId],
         queryFn: () => axiosInstance.get(`/user/${userId}`),
         enabled: !!userId,
     });
 
-    if (userStatus.isLoading) {
-        console.log("Loading");
-    }
-
-    if (userStatus.isError) {
-        console.log(userStatus.error);
-    }
-    if (!userStatus.isLoading) {
-
-        console.log(userStatus.data?.data.name); // Use this to access fetched data
-    }
-    // Data is available as userStatus.data
-
-
-
-    const handleSumbitofButton = async (id) => {
-
-        try {
-            mutation.mutate(id)
-
-
-            toast.success('Request Sent')
-
-            navigate('/dashboard')
-            await setTimeout(() => toast.success('check list page'), 1000)
-            console.log("Request Sent")
-        } catch (error) {
-            console.error(error)
-            toast.error("Failed to send request", error.message)
+    const handleSubmit = async () => {
+        if (!returnDate) {
+            toast.error("Please select a return date");
+            return;
         }
 
-    }
+        mutation.mutate({
+            resourceId: resource.id,
+            returnDate
+        });
+    };
 
-    // Handle loading and error states
     if (isLoading) {
-        return <div>Loading...</div>;
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#0D0D0D]">
+                <Loader className="animate-spin text-blue-500" size={48} />
+            </div>
+        );
     }
 
-    if (isError) {
-        return <div>Error: {error.message}</div>;
-    }
-
-    if (!resource) {
-        return <div>Resource not found</div>;
-    }
+    if (isError || !resource) return (
+        <div className="min-h-screen flex items-center justify-center bg-[#0D0D0D]">
+            <div className="text-center">
+                <h2 className="text-2xl font-bold text-gray-200 mb-2">
+                    {isError ? "Error Loading Resource" : "Resource Not Found"}
+                </h2>
+                <Button
+                    onClick={() => navigate('/dashboard')}
+                    className="mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                >
+                    Return to Dashboard
+                </Button>
+            </div>
+        </div>
+    );
 
     return (
-        <div className="max-w-3xl mx-auto px-4 py-8 relative">
-            <div className="absolute right-0 top-0 p-10 ">
-                <h1 onClick={() => navigate('/dashboard')} className="font-extrabold text-white text-xl rounded-full bg-red-900 px-4 cursor-pointer">X</h1>
-            </div>
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                <img
-                    src={resource.imageUrl || "/placeholder.svg?height=400&width=600"}
-                    alt={resource.name}
-                    className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                    <h1 className="text-2xl font-bold mb-4 text-blue-600">{resource.name}</h1>
-                    <p className="text-xl font-bold tracking-wider">name: {userStatus.data?.data.name || "unkown"}</p>
-                    <p className="text-gray-700 mb-4">description: {resource.description}</p>
-                    <p className="text-sm text-gray-500 mb-4">
-                        Category: <span className="text-gray-800">{resource.category}</span>
-                    </p>
-
-                    <p className="text-sm text-gray-500">
-                        Resource Type: <span className="text-gray-800">{resource.resourceType}</span>
-                    </p>
+        <div className="min-h-screen bg-[#0D0D0D] py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto">
+                {/* Close Button */}
+                <div className="flex justify-end mb-6">
+                    <button
+                        onClick={() => navigate('/dashboard')}
+                        className="text-gray-400 hover:text-gray-200 transition-colors"
+                    >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
 
-                <Button disabled={user.name == userStatus.data?.data.name} onClick={() => handleSumbitofButton(resource.id)} className="w-full ">Get Now</Button>
+                <div className="bg-[#0d0d0d] shadow-2xl rounded-3xl p-8 border border-gray-700/30 overflow-hidden">
+                    {/* Image Section */}
+                    <div className="relative h-96 rounded-2xl overflow-hidden mb-8">
+                        {resource.imageUrl ? (
+                            <img
+                                src={resource.imageUrl}
+                                alt={resource.name}
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-gray-800/50 relative overflow-hidden">
+                                <img
+                                    src="/animatepulse.svg"
+                                    alt="Loading..."
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
+                        <div className="absolute top-4 left-4">
+                            <span className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">
+                                {resource.category}
+                            </span>
+                        </div>
+                    </div>
 
+                    {/* Content Section */}
+                    <div className="space-y-8">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-100 mb-4">{resource.name}</h1>
+                            <div className="flex items-center mb-6 bg-gray-800/30 p-4 rounded-xl">
+                                <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
+                                    <span className="text-white font-semibold">
+                                        {userStatus.data?.data.name?.[0]?.toUpperCase()}
+                                    </span>
+                                </div>
+                                <div className="ml-3">
+                                    <p className="text-sm font-medium text-gray-300">Owner</p>
+                                    <p className="text-sm text-gray-400">{userStatus.data?.data.name}</p>
+                                </div>
+                            </div>
+                            <p className="text-gray-300 leading-relaxed">{resource.description}</p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-gray-800/30 p-4 rounded-xl">
+                                <p className="text-sm text-gray-400">Category</p>
+                                <p className="text-gray-200 font-medium">{resource.category}</p>
+                            </div>
+                            <div className="bg-gray-800/30 p-4 rounded-xl">
+                                <p className="text-sm text-gray-400">Resource Type</p>
+                                <p className="text-gray-200 font-medium">{resource.resourceType}</p>
+                            </div>
+                        </div>
+
+                        {/* Return Date Section */}
+                        <div className="border-t border-gray-700/30 pt-6 space-y-4">
+                            <label className="block text-sm font-medium text-gray-300">
+                                Select Return Date
+                            </label>
+                            <Input
+                                type="date"
+                                min={format(new Date(), "yyyy-MM-dd")}
+                                value={returnDate}
+                                onChange={(e) => setReturnDate(e.target.value)}
+                                className="w-full px-5 py-3 rounded-xl bg-gray-800/50 border border-gray-700 
+                                         text-gray-200 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
+                            />
+                            <Button
+                                disabled={user.name === userStatus.data?.data.name || !returnDate}
+                                onClick={handleSubmit}
+                                className="w-full py-4 rounded-xl font-bold transition-all
+                                         bg-gradient-to-r from-purple-600 to-blue-600 
+                                         hover:from-purple-700 hover:to-blue-700 
+                                         disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed"
+                            >
+                                Request Resource
+                            </Button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

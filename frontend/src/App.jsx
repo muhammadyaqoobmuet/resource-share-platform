@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import useAuthStore from "./store/authStore";
 import NavBar from "@/components/NavBar";
@@ -16,18 +16,20 @@ import MyPosts from './components/MyPosts';
 import PrivatePosts from './routes/PrivatePosts';
 import ResourceDetailPage from './components/ResourceDetailPage';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import { QrCode } from 'lucide-react';
-import { ReactQueryDevtools, ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
-import TableUI from './components/SentRequest';
+
+import { ReactQueryDevtools, } from '@tanstack/react-query-devtools';
+
 import SentRequest from './components/SentRequest';
 import RequestHave from './components/RequestHave';
+import Transactions from './components/Transactions';
 
 
 
 function App() {
+  const location = useLocation()
   const queryClient = new QueryClient()
-  const { isAuthenticated, isVerified, user } = useAuthStore();
-  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuthStore();
+
 
 
   useEffect(() => {
@@ -37,9 +39,17 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
 
+        {location.pathname !== "/" && <NavBar />}
         <ToastContainer />
-        <NavBar />
         <Routes>
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } />
+
+
+          <Route path="/transactions" element={<Transactions />} />
           <Route path="/sent-request" element={<SentRequest />} />
           <Route path="/requests" element={<RequestHave />} />
           <Route path="/resource/:id" element={<ResourceDetailPage />} />
@@ -60,11 +70,7 @@ function App() {
 
 
           <Route path="/verify" element={<VerifyOTP />} />
-          <Route path="/dashboard" element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          } />
+
 
         </Routes>
         <Footer />

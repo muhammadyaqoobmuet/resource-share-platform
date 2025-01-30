@@ -1,0 +1,25 @@
+<svg width="100%" height="100%" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#1F2937">
+    <animate
+      attributeName="opacity"
+      values="0.2;0.4;0.2"
+      dur="2s"
+      repeatCount="indefinite"
+    />
+  </rect>
+  
+  <!-- Image Icon in Center -->
+  <g opacity="0.3" transform="translate(350,250)">
+    <path 
+      d="M86.4,0H13.6C6.1,0,0,6.1,0,13.6v72.8C0,93.9,6.1,100,13.6,100h72.8c7.5,0,13.6-6.1,13.6-13.6V13.6 C100,6.1,93.9,0,86.4,0z M30,40c5.5,0,10-4.5,10-10s-4.5-10-10-10s-10,4.5-10,10S24.5,40,30,40z M80,80H20V65l20-20l10,10l20-20 l10,10V80z"
+      fill="white"
+    >
+      <animate
+        attributeName="opacity"
+        values="0.3;0.5;0.3"
+        dur="2s"
+        repeatCount="indefinite"
+      />
+    </path>
+  </g>
+</svg> 
