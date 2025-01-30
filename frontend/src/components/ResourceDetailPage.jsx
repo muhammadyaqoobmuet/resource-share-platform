@@ -36,10 +36,11 @@ const ResourceDetailPage = () => {
 
     const mutation = useMutation({
         mutationFn: async ({ resourceId, returnDate }) => {
-            return axiosInstance.post(`request/create`, {
+            const payload = {
                 resourceId,
-                returnDate: format(new Date(returnDate), "dd-MM-yyyy")
-            });
+                ...(returnDate && { returnDate: format(new Date(returnDate), "dd-MM-yyyy") })
+            };
+            return axiosInstance.post(`request/create`, payload);
         },
         onSuccess: () => {
             toast.success('Request Sent');
@@ -58,14 +59,14 @@ const ResourceDetailPage = () => {
     });
 
     const handleSubmit = async () => {
-        if (!returnDate) {
-            toast.error("Please select a return date");
+        if (resource?.resourceType === "LEND" && !returnDate) {
+            toast.error("Please select a return date for lending");
             return;
         }
 
         mutation.mutate({
             resourceId: resource.id,
-            returnDate
+            ...(resource?.resourceType === "LEND" && { returnDate })
         });
     };
 
@@ -165,19 +166,25 @@ const ResourceDetailPage = () => {
 
                         {/* Return Date Section */}
                         <div className="border-t border-gray-700/30 pt-6 space-y-4">
-                            <label className="block text-sm font-medium text-gray-300">
-                                Select Return Date
-                            </label>
-                            <Input
-                                type="date"
-                                min={format(new Date(), "yyyy-MM-dd")}
-                                value={returnDate}
-                                onChange={(e) => setReturnDate(e.target.value)}
-                                className="w-full px-5 py-3 rounded-xl bg-gray-800/50 border border-gray-700 
-                                         text-gray-200 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
-                            />
+                            {resource?.resourceType === "LEND" && (
+                                <>
+                                    <label className="block text-sm font-medium text-gray-300">
+                                        Select Return Date
+                                    </label>
+                                    <Input
+                                        type="date"
+                                        min={format(new Date(), "yyyy-MM-dd")}
+                                        value={returnDate}
+                                        onChange={(e) => setReturnDate(e.target.value)}
+                                        className="w-full px-5 py-3 rounded-xl bg-gray-800/50 border border-gray-700 
+                                                 text-gray-200 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
+                                    />
+                                </>
+                            )}
+
                             <Button
-                                disabled={user.name === userStatus.data?.data.name || !returnDate}
+                                disabled={user?.name === userStatus.data?.data.name ||
+                                    (resource?.resourceType === "LEND" && !returnDate)}
                                 onClick={handleSubmit}
                                 className="w-full py-4 rounded-xl font-bold transition-all
                                          bg-gradient-to-r from-purple-600 to-blue-600 

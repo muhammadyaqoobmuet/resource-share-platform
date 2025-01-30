@@ -36,12 +36,12 @@ function Login() {
                 <div className="relative w-full md:w-1/2 h-64 md:h-auto">
                     <img
                         src="./../../public/images/login.jpg"
-                        className="h-full w-full object-cover"
+                        className="h-full grayscale  w-full object-cover"
                         alt="Student collaboration"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/30 md:bg-gradient-to-t" >
-                        <div className="absolute  bottom-0 w-full text-center bg-[#5B246A] text-white ">
-                            <h1 className="text-3xl netflix tracking-wide font-bold mb-4 bg-gradient-to-r from-blue-400 via-[#cd9edae7] to-white bg-clip-text text-transparent">
+                        <div className="absolute  bottom-0 w-full text-center bg-[#225BE4] text-white ">
+                            <h1 className="text-3xl poppins-semibold tracking-wide font-bold mb-4 bg-gradient-to-r from-blue-400 via-[#cd9edae7] to-white bg-clip-text text-transparent">
                                 Explore communities
                             </h1>
                             

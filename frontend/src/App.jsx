@@ -25,6 +25,7 @@ import Transactions from './components/Transactions';
 
 
 
+
 function App() {
   const location = useLocation()
   const queryClient = new QueryClient()
@@ -47,6 +48,7 @@ function App() {
               <Dashboard />
             </PrivateRoute>
           } />
+
 
 
           <Route path="/transactions" element={<Transactions />} />

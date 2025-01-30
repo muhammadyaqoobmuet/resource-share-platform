@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAuthStore from "@/store/authStore";
 import { toast } from "react-toastify";
-import { Search, Settings } from "lucide-react";
+import { Search, Settings, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 import EditForm from "./EditForm";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 import GenralLoader from "./GenralLoader";
 import { RefreshCcwDotIcon } from "lucide-react"
+import axiosInstance from "@/utils/axiosInstance";
+import { useQuery } from "@tanstack/react-query";
 
 const ResourceList = () => {
     const { fetchResources, resources, user, deleteProduct, isLoading } = useAuthStore();
@@ -19,23 +21,62 @@ const ResourceList = () => {
     const navigate = useNavigate()
     const list = ["DONATED", "UNAVAILABLE"]
     const [searchQuery, setSearchQuery] = useState("");
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const pageSize = 9; // Items per page
+    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+    const [filters, setFilters] = useState({
+        type: "All",
+        category: "All",
+        status: "Any"
+    });
+    const [showFilters, setShowFilters] = useState(false);
+    const searchTimeoutRef = useRef(null);
 
+    // Remove fetchResources from dependency since we're using React Query now
     useEffect(() => {
-        console.log(resources);
-        const loadResources = async () => {
-            try {
-                await fetchResources();
-            } catch (error) {
-                console.error("Failed to fetch resources:", error);
-                toast.error("Failed to load resources. Please try again.");
+        setLocalLoading(false);
+    }, []);
 
-            } finally {
-                setLocalLoading(false);
+    // Update the query to handle both search and filters
+    const { data, isLoading: queryLoading, error, refetch } = useQuery({
+        queryKey: ['resources', currentPage, pageSize, filters, debouncedSearchQuery],
+        queryFn: async () => {
+            const params = {
+                page: currentPage,
+                size: pageSize
+            };
+
+            // Add search param if exists
+            if (debouncedSearchQuery) {
+                params.keyword = debouncedSearchQuery;
+                return axiosInstance.get('/resource/search', { params })
+                    .then(response => {
+                        setTotalPages(Math.ceil(response.data.totalElements / pageSize));
+                        return response.data.content;
+                    });
             }
-        };
 
-        loadResources();
-    }, [fetchResources]);
+            // If no search, use filters
+            if (filters.type !== "All") {
+                params.type = filters.type.toUpperCase();
+            }
+            if (filters.category !== "All") {
+                params.category = filters.category.toUpperCase();
+            }
+            if (filters.status !== "Any") {
+                params.status = filters.status.toUpperCase();
+            }
+
+            return axiosInstance.get('/resource/', { params })
+                .then(response => {
+                    setTotalPages(Math.ceil(response.data.totalElements / pageSize));
+                    return response.data.content;
+                });
+        },
+        staleTime: 300,
+        refetchOnWindowFocus: false
+    });
 
     const handleEdit = (resource) => {
         setSelectedResource(resource);
@@ -62,18 +103,53 @@ const ResourceList = () => {
         setActiveMenu(activeMenu === id ? null : id);
     };
 
-    // Dummy search method - you can replace this with actual search logic later
-    const handleSearch = (e) => {
-        setSearchQuery(e.target.value);
-        // You can implement actual search logic here
-        console.log("Searching for:", e.target.value);
+    // Update search handling to use setTimeout
+    const handleSearchInput = (e) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+
+        // Clear any existing timeout
+        if (searchTimeoutRef.current) {
+            clearTimeout(searchTimeoutRef.current);
+        }
+
+        // If empty, clear search immediately
+        if (!value.trim()) {
+            setDebouncedSearchQuery("");
+            setCurrentPage(0);
+            return;
+        }
+
+        // Set new timeout for search
+        searchTimeoutRef.current = setTimeout(() => {
+            setDebouncedSearchQuery(value);
+            setCurrentPage(0);
+        }, 500);
     };
 
-    // Add refresh function
+    // Cleanup timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (searchTimeoutRef.current) {
+                clearTimeout(searchTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    // Pagination controls
+    const handlePreviousPage = () => {
+        setCurrentPage(prev => Math.max(0, prev - 1));
+    };
+
+    const handleNextPage = () => {
+        setCurrentPage(prev => Math.min(totalPages - 1, prev + 1));
+    };
+
+    // Update handleRefresh to use refetch
     const handleRefresh = async () => {
         setIsRefreshing(true);
         try {
-            await fetchResources();
+            await refetch();
             toast.success("Resources refreshed!");
         } catch (error) {
             toast.error("Failed to refresh resources");
@@ -82,7 +158,24 @@ const ResourceList = () => {
         }
     };
 
-    if (isLoading || localLoading) {
+    // Update filter change to not need manual refetch
+    const handleFilterChange = (filterType, value) => {
+        setFilters(prev => ({
+            ...prev,
+            [filterType]: value
+        }));
+        setCurrentPage(0);
+        // Remove the refetch() call since query will auto-update
+    };
+
+    // Update filter options to match backend expectations
+    const filterOptions = {
+        type: ["All", "LEND", "DONATE"],
+        category: ["All", "BOOKS", "NOTES", "EQUIPMENT", "OTHER"],
+        status: ["Any", "AVAILABLE", "UNAVAILABLE", "DONATED"]
+    };
+
+    if (isLoading || localLoading || queryLoading) {
         return (
             <GenralLoader />
         );
@@ -96,36 +189,90 @@ const ResourceList = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4"
                 >
-                    Community Hub
-                    <div className="w-60 hidden md:block h-[3px] mb-2 mt-1 mx-auto bg-gradient-to-r from-purple-500 to-blue-500" />
+                    Campus Hub
+                    <div className="w-60 hidden md:block h-[3px] mb-2 mt-1 mx-auto bg-gradient-to-r from-purple-500 to-blue-500 curved-div"></div>
                 </motion.h1>
                 <p className="text-lg text-gray-300 max-w-2xl mx-auto font-light">
                     Explore shared knowledge and contribute your resources
                 </p>
             </div>
 
-            {/* Premium Search Input */}
-            <div className="max-w-3xl mx-auto mb-16">
-                <motion.div
-                    initial={{ scale: 0.95 }}
-                    animate={{ scale: 1 }}
-                    className="relative group"
-                >
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="relative flex items-center">
-                        <Search className="absolute left-4 text-purple-300/80 h-6 w-6 z-10" />
-                        <input
-                            type="text"
-                            placeholder="Discover resources..."
-                            value={searchQuery}
-                            onChange={handleSearch}
-                            className="w-full pl-14 pr-6 py-4 border border-purple-500/30 rounded-2xl 
-                                        focus:outline-none focus:ring-2 focus:ring-purple-400/50 
-                                        bg-gray-900/80 backdrop-blur-sm text-gray-200 placeholder-gray-500 
-                                        shadow-xl shadow-purple-900/10 hover:border-purple-400/40 transition-all"
-                        />
-                    </div>
-                </motion.div>
+            {/* Search and Filter Section */}
+            <div className="max-w-3xl mx-auto mb-16 space-y-4">
+                {/* Search Input with Button */}
+                <div className="flex items-center gap-4">
+                    <motion.div
+                        initial={{ scale: 0.95 }}
+                        animate={{ scale: 1 }}
+                        className="relative group flex-1"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="relative flex items-center">
+                            <Search className="absolute left-4 text-purple-300/80 h-6 w-6 z-10" />
+                            <input
+                                type="text"
+                                placeholder="Search resources..."
+                                value={searchQuery}
+                                onChange={handleSearchInput}
+                                className="w-full pl-14 pr-6 py-4 border border-purple-500/30 rounded-2xl 
+                                            focus:outline-none focus:ring-2 focus:ring-purple-400/50 
+                                            bg-gray-900/80 backdrop-blur-sm text-gray-200 placeholder-gray-500 
+                                            shadow-xl shadow-purple-900/10 hover:border-purple-400/40 transition-all"
+                            />
+                        </div>
+                    </motion.div>
+
+                    <button
+                        onClick={handleRefresh}
+                        className="px-4 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-all"
+                    >
+                        Search
+                    </button>
+
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className={`p-3 rounded-xl transition-all ${showFilters
+                            ? 'bg-purple-500/20 text-purple-300'
+                            : 'bg-gray-800 text-gray-400 hover:text-gray-200'
+                            }`}
+                    >
+                        <Filter className="w-5 h-5" />
+                    </button>
+                </div>
+
+                {/* Filters */}
+                <AnimatePresence>
+                    {showFilters && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="bg-gray-900/50 backdrop-blur-sm rounded-xl p-4 border border-gray-800"
+                        >
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                {Object.entries(filterOptions).map(([filterType, options]) => (
+                                    <div key={filterType}>
+                                        <label className="block text-sm font-medium text-gray-400 mb-2 capitalize">
+                                            {filterType}
+                                        </label>
+                                        <select
+                                            value={filters[filterType.toLowerCase()]}
+                                            onChange={(e) => handleFilterChange(filterType.toLowerCase(), e.target.value)}
+                                            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-gray-200 
+                                                     focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
+                                        >
+                                            {options.map(option => (
+                                                <option key={option} value={option}>
+                                                    {option}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
             <div className="w-full flex justify-end text-white p-4">
                 <button
@@ -140,13 +287,14 @@ const ResourceList = () => {
                 </button>
             </div>
 
-            {!Array.isArray(resources) || resources.length === 0 ? (
+            {/* Resources Grid */}
+            {!Array.isArray(data) || data.length === 0 ? (
                 <div className="text-center py-12">
                     <p className="text-xl text-gray-400/80 font-light">No resources found</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {resources.map((resource, index) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-center">
+                    {data.map((resource, index) => (
                         <motion.div
                             key={resource.id}
                             className="group relative bg-[#292929] from-gray-900/80 to-gray-900 rounded-2xl overflow-hidden shadow-2xl hover:shadow-purple-900/20 transition-shadow"
@@ -227,7 +375,7 @@ const ResourceList = () => {
                             <Button
                                 onClick={() => goToMain(resource.id)}
                                 disabled={list.includes(resource.status)}
-                                className={`w-full mt-4 rounded-t-none rounded-b-2xl border-t border-gray-700/50
+                                className={`w-full mt-4 rounded-t-none just rounded-b-2xl border-t border-gray-700/50
                                         ${list.includes(resource.status)
                                         ? "bg-gradient-to-r from-green-900 to-emerald-900 text-emerald-300"
                                         : "bg-gradient-to-r from-purple-200 to-blue-500 text-black hover:text-white hover:from-purple-500/30 hover:to-blue-500/30"
@@ -235,8 +383,44 @@ const ResourceList = () => {
                             >
                                 {list.includes(resource.status) ? 'Unavailable' : 'Available Now'}
                             </Button>
-                       </motion.div>
+                        </motion.div>
                     ))}
+                </div>
+            )}
+
+            {/* Pagination Controls */}
+            <div className="mt-8 flex items-center justify-center gap-4">
+                <button
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 0}
+                    className={`p-2 rounded-lg transition-all ${currentPage === 0
+                        ? 'bg-gray-800/50 text-gray-600 cursor-not-allowed'
+                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                        }`}
+                >
+                    <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                <span className="text-gray-400">
+                    Page {currentPage + 1} of {totalPages}
+                </span>
+
+                <button
+                    onClick={handleNextPage}
+                    disabled={currentPage >= totalPages - 1}
+                    className={`p-2 rounded-lg transition-all ${currentPage >= totalPages - 1
+                        ? 'bg-gray-800/50 text-gray-600 cursor-not-allowed'
+                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                        }`}
+                >
+                    <ChevronRight className="w-5 h-5" />
+                </button>
+            </div>
+
+            {/* Error State */}
+            {error && (
+                <div className="text-center py-12 text-red-400">
+                    Failed to load resources. Please try again.
                 </div>
             )}
 

@@ -1,38 +1,31 @@
 // Dashboard.js
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import useAuthStore from '@/store/authStore';
-import { Link, redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ResourceList from './ResourceList';
-import { Loader, Users } from 'lucide-react';
 import GenralLoader from './GenralLoader';
+import ErrorBoundary from './ErrorBoundary';
 
 const Dashboard = () => {
-    const { user, isAuthenticated, isVerified, getUser } = useAuthStore();
-    const [loading, setLoading] = useState(true);
+    const { isAuthenticated, isVerified, getUser } = useAuthStore();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('Authenticated:', isAuthenticated);
-        console.log('Verified:', isVerified);
-
         if (isAuthenticated && isVerified) {
-            console.log("here");
-            redirect('/dashboard');
-            setLoading(false);
-            getUser()
+            getUser();
         } else {
-            redirect('/')
+            navigate('/');
         }
-    }, [isAuthenticated, isVerified]);
-
+    }, [isAuthenticated, isVerified, navigate, getUser]);
 
     return (
-        <div className=" min-h-screen bg-[#0d0d0d]">
-            <Suspense fallback={GenralLoader}>
-
-                <ResourceList />
-            </Suspense>
+        <div className="min-h-screen bg-[#0d0d0d]">
+            <ErrorBoundary>
+                <Suspense fallback={<GenralLoader />}>
+                    <ResourceList />
+                </Suspense>
+            </ErrorBoundary>
         </div>
-
     );
 };
 

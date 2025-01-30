@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import axiosInstance from "@/utils/axiosInstance";
 import { toast } from "react-toastify";
 import GenralLoader from "./GenralLoader";
+import { Mail, AlertCircle } from 'lucide-react';
 
 const RequestHave = () => {
     const queryClient = useQueryClient();
@@ -57,6 +58,23 @@ const RequestHave = () => {
 
     return (
         <div className="min-h-screen max-w-[2000px] mx-auto bg-[#0a0a0a] p-6 sm:p-8 lg:p-12">
+            {/* Warning Banner */}
+            <div className="mb-8 bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-500/20 rounded-xl p-4 backdrop-blur-sm">
+                <div className="flex items-start space-x-3">
+                    <AlertCircle className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                        <h3 className="text-blue-400 font-medium mb-1">Communication Notice</h3>
+                        <p className="text-gray-300 text-sm leading-relaxed">
+                            For now, please use email to communicate with borrowers by clicking on mailicon. Our integrated
+                            chat system is under development and will be available soon.
+                            <span className="text-red-400 ml-1">
+                                Note: Any communication outside the platform is at your own risk.
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             {/* Page Heading */}
             <div className="text-center mb-12">
                 <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
@@ -89,7 +107,23 @@ const RequestHave = () => {
                                 className="hover:bg-gray-800/40 transition-colors"
                             >
                                 <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-200 font-medium">{row.resourceDto.name}</td>
-                                <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-300">{row.borrower.name}</td>
+                                <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-300 flex items-center">
+                                    {row.borrower.name}
+                                    {row.status === "ACCEPTED" && (
+                                        <a
+                                            href={`mailto:${row.borrower.email}`}
+                                            className="ml-2 inline-flex items-center p-1 rounded-full bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/30 transition-all hover:scale-110 group relative"
+                                            title={`Send email to ${row.borrower.email}`}
+                                            aria-label={`Contact ${row.borrower.name}`}
+                                        >
+                                            <Mail className="w-4 h-4 text-cyan-300" />
+                                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-cyan-100 text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg border border-gray-700">
+                                                {row.borrower.email}
+                                                <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 transform rotate-45 border-b border-r border-gray-700"></div>
+                                            </span>
+                                        </a>
+                                    )}
+                                </td>
                                 <td className="px-4 py-3 sm:px-6 sm:py-4">
                                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm ${statusStyles[row.status]}`}>
                                         {row.status}
@@ -104,8 +138,8 @@ const RequestHave = () => {
                                                 <Button
                                                     onClick={() => approveMutation.mutate(row)}
                                                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${approveMutation.isLoading
-                                                            ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
-                                                            : "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                                                        ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
+                                                        : "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
                                                         }`}
                                                     disabled={approveMutation.isLoading}
                                                 >
@@ -114,8 +148,8 @@ const RequestHave = () => {
                                                 <Button
                                                     onClick={() => declineMutation.mutate(row)}
                                                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${declineMutation.isLoading
-                                                            ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
-                                                            : "bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white"
+                                                        ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
+                                                        : "bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white"
                                                         }`}
                                                     disabled={declineMutation.isLoading}
                                                 >

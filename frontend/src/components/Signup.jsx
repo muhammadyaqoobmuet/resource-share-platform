@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import useAuthStore from "@/store/authStore"; // Import your Zustand store
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Eye, EyeOff, Check, X } from "lucide-react";
 
 function Signup() {
@@ -110,7 +110,7 @@ function Signup() {
                                     {...register("email", {
                                         required: "Email is required",
                                         pattern: {
-                                            value: /^[A-Z0-9._%+-]+@students\.muet\.edu\.pk$/i,
+                                            value: /^[A-Z0-9._%+-]+/i,
                                             message: "Must be a valid MUET student email"
                                         }
                                     })}
@@ -209,7 +209,17 @@ function Signup() {
                             >
                                 {isLoading ? "Creating Account..." : "Create Account"}
                             </Button>
+                            <p className="text-center text-gray-400 text-sm sm:text-base">
+                                have an account?{'  '}
+                                <Link
+                                    to="/signup"
+                                    className="text-blue-500 hover:text-blue-400 transition-colors font-medium"
+                                >
+                                    Login now
+                                </Link>
+                            </p>
                         </form>
+
                     </div>
                 </div>
             </div>

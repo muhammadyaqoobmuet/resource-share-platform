@@ -27,7 +27,9 @@
 body {
   background-color: #0a0a0a;
 }
-
+.curved-div {
+  clip-path: ellipse(100% 50% at 50% 50%);
+}
 .logo {
   font-family: "poppins";
   font-weight: 400;
