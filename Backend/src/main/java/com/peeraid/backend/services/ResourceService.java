@@ -6,6 +6,7 @@ import com.peeraid.backend.dto.ResourceDto;
 import com.peeraid.backend.mapper.ResourceMapper;
 import com.peeraid.backend.models.entity.Resource;
 import com.peeraid.backend.models.entity.User;
+import com.peeraid.backend.models.enums.Image;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,22 +34,18 @@ public class ResourceService {
 
     public void createResource(CreateResourceRequest createResourceRequest, MultipartFile file) throws IOException {
         Resource resource = ResourceMapper.mapToResource(createResourceRequest);
-        imageUpload(file,resource);//upload image asynchronously
+
+        // Upload image and wait for the result
+        CompletableFuture<Image> imageFuture = imageUpload(file, resource);
+
+        // Block until the image upload completes
+        imageFuture.join();
+
+        // Now that the image is uploaded, save the resource
         resource.setUser(Utill.getCurrentUser());
         resourceRepo.save(resource);
-
-
     }
 
-
-//    public Page<ResourceDto> getResources(int page, int size) {
-//
-//        Pageable pageable = PageRequest.of(page,size);
-//        Page<Resource> resources = resourceRepo.findAllOrderByResourceIdDesc(pageable);
-//
-//       return resources.map(ResourceMapper::mapToResourceDto);
-//
-//    }
 
     public String updateResource(ResourceDto resourceDto, MultipartFile file) throws IOException {
         Resource resource = getResource(resourceDto.getId());
@@ -64,16 +62,18 @@ public class ResourceService {
 
     }
     @Async
-    protected void imageUpload(MultipartFile file, Resource resource) throws IOException {
-        cloudinaryService.uploadImage(file).thenAccept(image -> {
+    protected CompletableFuture<Image> imageUpload(MultipartFile file, Resource resource) throws IOException {
+        return cloudinaryService.uploadImage(file).thenApply(image -> {
+            // Update resource with image details after upload is complete
             resource.setImageUrl(image.getUrl());
             resource.setImagePublicId(image.getPublicID());
-            resourceRepo.save(resource); // Save the resource after updating its image details
+            return image;
         }).exceptionally(ex -> {
             System.err.println("Error during image upload: " + ex.getMessage());
             return null;
         });
     }
+
     @Async
     public void imageUpdate(MultipartFile file, Resource resource) throws IOException {
         if (resource.getImagePublicId() == null || resource.getImagePublicId().isEmpty()) {
