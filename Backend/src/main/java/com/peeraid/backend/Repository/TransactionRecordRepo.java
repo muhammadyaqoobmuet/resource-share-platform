@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface TransactionRecordRepo extends JpaRepository<TransactionRecord, Long> {
     Optional<TransactionRecord> findById(long id);
-    List<TransactionRecord> findAllByBorrower(User borrower);
-    List<TransactionRecord> findAllByLender(User lender);
+
+    List<TransactionRecord> findAllByBorrowerOrderByIdDesc(User borrower);
+    List<TransactionRecord> findAllByLenderOrderByIdDesc(User lender);
 }

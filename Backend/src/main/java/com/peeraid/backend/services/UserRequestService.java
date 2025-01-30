@@ -109,7 +109,7 @@ public class UserRequestService {
 
     public List<UserRequestDto> getRequestsReceived(){
        User user =  Utill.getCurrentUser();
-        List<UserRequest> userRequests = userRequestRepo.findAllByLender(user);
+        List<UserRequest> userRequests = userRequestRepo.findAllByLenderOrderByRequestIdDesc(user);
 
       return  userRequests.stream().map(UserRequestMapper::mapToUserRequestDto).collect(Collectors.toList()) ;
     }
@@ -120,7 +120,7 @@ public class UserRequestService {
 
     public List<UserRequestDto> getRequestsSent(){
         User user =  Utill.getCurrentUser();
-        List<UserRequest> userRequests = userRequestRepo.findAllByBorrower(user);
+        List<UserRequest> userRequests = userRequestRepo.findAllByBorrowerOrderByRequestIdDesc(user);
 
 
         return  userRequests.stream().map(UserRequestMapper::mapToUserRequestDto).collect(Collectors.toList()) ;

@@ -13,9 +13,9 @@ import java.util.Optional;
 public interface UserRequestRepo extends JpaRepository<UserRequest,Long> {
     Optional<UserRequest> findByRequestId(long requestID);
 
-    List<UserRequest> findAllByLender(User lender);
+    List<UserRequest> findAllByLenderOrderByRequestIdDesc(User lender);
 
-    List<UserRequest> findAllByBorrower(User borrower);
+    List<UserRequest> findAllByBorrowerOrderByRequestIdDesc(User borrower);
 
     Optional<UserRequest>findByBorrowerAndResource(User user, Resource resource);
 }

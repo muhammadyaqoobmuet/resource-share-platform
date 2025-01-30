@@ -6,6 +6,10 @@ import com.peeraid.backend.dto.ResourceDto;
 import com.peeraid.backend.mapper.ResourceMapper;
 import com.peeraid.backend.models.entity.Resource;
 import com.peeraid.backend.models.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -36,13 +40,14 @@ public class ResourceService {
     }
 
 
-    public List<ResourceDto> getResources() {
-
-        List<Resource> resources = resourceRepo.findAllOrderByCreatedDateDesc();
-
-       return resources.stream().map(ResourceMapper::mapToResourceDto).collect(Collectors.toList()) ;
-
-    }
+//    public Page<ResourceDto> getResources(int page, int size) {
+//
+//        Pageable pageable = PageRequest.of(page,size);
+//        Page<Resource> resources = resourceRepo.findAllOrderByResourceIdDesc(pageable);
+//
+//       return resources.map(ResourceMapper::mapToResourceDto);
+//
+//    }
 
     public String updateResource(ResourceDto resourceDto, MultipartFile file) throws IOException {
         Resource resource = getResource(resourceDto.getId());
@@ -109,16 +114,55 @@ public class ResourceService {
         return ResourceMapper.mapToResourceDto(resource);
     }
 
-    public List<ResourceDto> getMyResources() {
+    public Page<ResourceDto> getMyResources(int page , int size) {
+        Pageable pageable = PageRequest.of(page,size);
         User user = Utill.getCurrentUser();
-      List<Resource> resources =   resourceRepo.findAllByUserId(user.getUserId());
-       return resources.stream().map(ResourceMapper::mapToResourceDto).collect(Collectors.toList());
+      Page<Resource> resources =   resourceRepo.findAllByUserId(user.getUserId(),pageable);
+       return resources.map(ResourceMapper::mapToResourceDto);
     }
 
     private Resource getResource(long id){
         return resourceRepo.findByResourceId(id)
                  .orElseThrow(()-> new RuntimeException("Resource not found"));
      }
+     public Page<ResourceDto> searchResource(String key,int page, int size){
+        Pageable pageable = PageRequest.of(page,size);
+         Page<Resource> resources =  resourceRepo.searchResource(key,pageable);
+         return resources.map(ResourceMapper::mapToResourceDto);
+     }
+
+    public Page<ResourceDto> getResources(String type, String category, String status, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("resourceId").descending());
+
+        boolean filterByType = type != null && !type.equalsIgnoreCase("All");
+        boolean filterByCategory = category != null && !category.equalsIgnoreCase("All");
+        boolean filterByStatus = status != null && !status.equalsIgnoreCase("Any");
+
+        if (filterByType && filterByCategory && filterByStatus) {
+            return resourceRepo.getFilteredResource(type, category, status,pageable)
+                    .map(ResourceMapper::mapToResourceDto);
+        } else if (filterByType && filterByCategory) {
+            return resourceRepo.getFilteredByTypeAndCategory(pageable, type, category)
+                    .map(ResourceMapper::mapToResourceDto);
+        } else if (filterByType && filterByStatus) {
+            return resourceRepo.getFilteredByTypeAndStatus(pageable, type, status)
+                    .map(ResourceMapper::mapToResourceDto);
+        } else if (filterByCategory && filterByStatus) {
+            return resourceRepo.getFilteredByCategoryAndStatus(pageable, category, status)
+                    .map(ResourceMapper::mapToResourceDto);
+        } else if (filterByType) {
+            return resourceRepo.getFilteredByType(pageable, type)
+                    .map(ResourceMapper::mapToResourceDto);
+        } else if (filterByCategory) {
+            return resourceRepo.getFilteredByCategory(pageable, category)
+                    .map(ResourceMapper::mapToResourceDto);
+        } else if (filterByStatus) {
+            return resourceRepo.getFilteredByStatus(pageable, status)
+                    .map(ResourceMapper::mapToResourceDto);
+        } else {
+            return resourceRepo.findAll(pageable).map(ResourceMapper::mapToResourceDto);
+        }
+    }
 
 
 }

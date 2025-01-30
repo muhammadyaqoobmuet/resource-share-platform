@@ -101,7 +101,7 @@ public class TransactionRecordService {
     public List<TransactionRecordDto> getBorrowedRecords() {
 
         User user = Utill.getCurrentUser();
-        List<TransactionRecord> borrowedTransactions = transactionRecordRepository.findAllByBorrower(user);
+        List<TransactionRecord> borrowedTransactions = transactionRecordRepository.findAllByBorrowerOrderByIdDesc(user);
         return borrowedTransactions.stream().map(TransactionRecordMapper::mapToTransactionRecordDto).collect(Collectors.toList());
 
     }
@@ -109,7 +109,7 @@ public class TransactionRecordService {
     public List<TransactionRecordDto> getLentRecords() {
 
         User user = Utill.getCurrentUser();
-        List<TransactionRecord> borrowedTransactions = transactionRecordRepository.findAllByLender(user);
+        List<TransactionRecord> borrowedTransactions = transactionRecordRepository.findAllByLenderOrderByIdDesc(user);
         return borrowedTransactions.stream().map(TransactionRecordMapper::mapToTransactionRecordDto).collect(Collectors.toList());
 
     }
