@@ -1,6 +1,6 @@
 package com.peeraid.backend.mapper;
 
-import com.peeraid.backend.models.enums.TransactionRecord;
+import com.peeraid.backend.models.entity.TransactionRecord;
 import com.peeraid.backend.dto.TransactionRecordDto;
 
 public class TransactionRecordMapper {

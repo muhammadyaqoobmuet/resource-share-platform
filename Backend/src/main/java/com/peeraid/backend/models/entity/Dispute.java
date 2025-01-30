@@ -1,5 +1,7 @@
-package com.peeraid.backend.models.enums;
+package com.peeraid.backend.models.entity;
 
+import com.peeraid.backend.models.enums.DisputeStatus;
+import com.peeraid.backend.models.enums.DisputeType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

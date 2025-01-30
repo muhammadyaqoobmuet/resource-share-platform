@@ -1,4 +1,4 @@
-package com.peeraid.backend.models.enums;
+package com.peeraid.backend.models.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

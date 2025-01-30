@@ -1,7 +1,7 @@
 package com.peeraid.backend.Repository;
 
-import com.peeraid.backend.models.enums.TransactionRecord;
-import com.peeraid.backend.models.enums.User;
+import com.peeraid.backend.models.entity.TransactionRecord;
+import com.peeraid.backend.models.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

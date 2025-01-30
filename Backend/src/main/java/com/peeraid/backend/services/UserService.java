@@ -3,7 +3,7 @@ package com.peeraid.backend.services;
 import com.peeraid.backend.Repository.UserRepository;
 import com.peeraid.backend.dto.UserDto;
 import com.peeraid.backend.mapper.UserMapper;
-import com.peeraid.backend.models.enums.User;
+import com.peeraid.backend.models.entity.User;
 import org.springframework.stereotype.Service;
 
 @Service

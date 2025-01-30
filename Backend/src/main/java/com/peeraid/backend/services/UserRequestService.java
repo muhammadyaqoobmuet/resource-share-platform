@@ -4,6 +4,9 @@ import com.peeraid.backend.Repository.ResourceRepo;
 import com.peeraid.backend.Repository.UserRequestRepo;
 import com.peeraid.backend.dto.UserRequestDto;
 import com.peeraid.backend.mapper.UserRequestMapper;
+import com.peeraid.backend.models.entity.Resource;
+import com.peeraid.backend.models.entity.User;
+import com.peeraid.backend.models.entity.UserRequest;
 import com.peeraid.backend.models.enums.*;
 import org.springframework.stereotype.Service;
 

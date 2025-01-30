@@ -3,7 +3,7 @@ package com.peeraid.backend.mapper;
 import com.peeraid.backend.Request.CreateResourceRequest;
 import com.peeraid.backend.dto.ResourceDto;
 import com.peeraid.backend.models.enums.ResourceCategory;
-import com.peeraid.backend.models.enums.Resource;
+import com.peeraid.backend.models.entity.Resource;
 import com.peeraid.backend.models.enums.ResourceType;
 
 public class ResourceMapper {

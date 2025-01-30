@@ -2,9 +2,9 @@ package com.peeraid.backend.services;
 
 import com.peeraid.backend.Repository.DisputeRepository;
 import com.peeraid.backend.Request.DisputeBody;
-import com.peeraid.backend.models.enums.Dispute;
+import com.peeraid.backend.models.entity.Dispute;
 import com.peeraid.backend.models.enums.DisputeType;
-import com.peeraid.backend.models.enums.TransactionRecord;
+import com.peeraid.backend.models.entity.TransactionRecord;
 import org.springframework.stereotype.Service;
 
 @Service
