@@ -1,10 +1,18 @@
-import { motion } from 'framer-motion';
-import { ArrowRightCircle } from 'lucide-react';
-import { timelineSteps } from './timelineData';
-import { TimelineStep } from './TimelineStep';
-import { Button } from '@/components/ui/button';
+import { motion } from "framer-motion";
+import { ArrowRightCircle } from "lucide-react";
+import { timelineSteps } from "./timelineData";
+import { TimelineStep } from "./TimelineStep";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export function Timeline() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    console.log("clicked");
+    navigate("/signup");
+  };
+
   return (
     <section className="py-24 md:py-32 bg-white">
       <div className="container px-4 mx-auto">
@@ -49,14 +57,14 @@ export function Timeline() {
           viewport={{ once: true }}
           className="mt-16 text-center"
         >
-          <Button
+          <button
             variant="outline"
             size="lg"
             className="group hover:bg-neutral-900 hover:text-white transition-all duration-300"
           >
-            <span>Join the Community</span>
+            <a href="/signup">Join the Community</a>
             <ArrowRightCircle className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
+          </button>
         </motion.div>
       </div>
     </section>

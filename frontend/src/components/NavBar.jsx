@@ -105,7 +105,7 @@ function NavBar({ properties  }) {
                     </Button>
 
                     {showRequestsDropdown && (
-                      <div className="absolute top-full left-0 mt-2 w-48 bg-black rounded-md shadow-lg py-1 z-50 border border-gray-800">
+                      <div className="absolute top-full left-0 mt-1 w-48 bg-black rounded-md shadow-lg py-1 z-50 border border-gray-800">
                         <button
                           onClick={() => {
                             navigate("/requests");
@@ -141,12 +141,8 @@ function NavBar({ properties  }) {
         className={`fixed top-0 right-0 h-full bg-black text-white w-64 transform transition-all duration-300 ease-in-out z-50 ${isSidebarOpen ? "translate-x-0" : "translate-x-full"
           }`}
       >
-        <div className="flex justify-between items-center p-6 border-b border-gray-800">
-          <img
-            src="/public/images/Logo.png"
-            className="w-[150px] object-cover brightness-200"
-            alt="Logo"
-          />
+        <div className="flex justify-self-end items-center p-6  ">
+          
           <button
             onClick={toggleSidebar}
             className="text-white text-2xl p-2 rounded hover:bg-white/10 hover:rotate-180 transition-all"

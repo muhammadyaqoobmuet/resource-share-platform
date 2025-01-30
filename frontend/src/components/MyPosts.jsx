@@ -91,6 +91,8 @@ const MyPosts = () => {
                             whileHover={{ scale: 1.02 }}
                         >
                             <div className="relative overflow-hidden">
+                                
+                                
                                 <img
                                     src={post.imageUrl || "/placeholder.svg"}
                                     alt={post.name}

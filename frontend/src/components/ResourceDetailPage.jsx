@@ -71,29 +71,22 @@ const ResourceDetailPage = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <Loader className="animate-spin text-blue-600" size={48} />
+            <div className="min-h-screen flex items-center justify-center bg-[#0D0D0D]">
+                <Loader className="animate-spin text-blue-500" size={48} />
             </div>
         );
     }
 
-    if (isError) return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    if (isError || !resource) return (
+        <div className="min-h-screen flex items-center justify-center bg-[#0D0D0D]">
             <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Resource</h2>
-                <p className="text-gray-600">{error.message}</p>
-                <Button onClick={() => navigate('/dashboard')} className="mt-4">
-                    Return to Dashboard
-                </Button>
-            </div>
-        </div>
-    );
-
-    if (!resource) return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Resource Not Found</h2>
-                <Button onClick={() => navigate('/dashboard')} className="mt-4">
+                <h2 className="text-2xl font-bold text-gray-200 mb-2">
+                    {isError ? "Error Loading Resource" : "Resource Not Found"}
+                </h2>
+                <Button
+                    onClick={() => navigate('/dashboard')}
+                    className="mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                >
                     Return to Dashboard
                 </Button>
             </div>
@@ -101,13 +94,13 @@ const ResourceDetailPage = () => {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-[#0D0D0D] py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
                 {/* Close Button */}
                 <div className="flex justify-end mb-6">
                     <button
                         onClick={() => navigate('/dashboard')}
-                        className="text-gray-500 hover:text-gray-700 transition-colors"
+                        className="text-gray-400 hover:text-gray-200 transition-colors"
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -115,52 +108,64 @@ const ResourceDetailPage = () => {
                     </button>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div className="bg-[#0d0d0d] shadow-2xl rounded-3xl p-8 border border-gray-700/30 overflow-hidden">
                     {/* Image Section */}
-                    <div className="relative h-96">
-                        <img
-                            src={resource.imageUrl || "/placeholder.svg?height=400&width=600"}
-                            alt={resource.name}
-                            className="w-full h-full object-cover"
-                        />
+                    <div className="relative h-96 rounded-2xl overflow-hidden mb-8">
+                        {resource.imageUrl ? (
+                            <img
+                                src={resource.imageUrl}
+                                alt={resource.name}
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-gray-800/50 relative overflow-hidden">
+                                <img
+                                    src="/animatepulse.svg"
+                                    alt="Loading..."
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
                         <div className="absolute top-4 left-4">
-                            <span className="bg-blue-600/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm">
+                            <span className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">
                                 {resource.category}
                             </span>
                         </div>
                     </div>
 
                     {/* Content Section */}
-                    <div className="p-8">
-                        <div className="mb-8">
-                            <h1 className="text-3xl font-bold text-gray-900 mb-4">{resource.name}</h1>
-                            <div className="flex items-center mb-6">
-                                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                    <span className="text-blue-600 font-semibold">
+                    <div className="space-y-8">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-100 mb-4">{resource.name}</h1>
+                            <div className="flex items-center mb-6 bg-gray-800/30 p-4 rounded-xl">
+                                <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
+                                    <span className="text-white font-semibold">
                                         {userStatus.data?.data.name?.[0]?.toUpperCase()}
                                     </span>
                                 </div>
                                 <div className="ml-3">
-                                    <p className="text-sm font-medium text-gray-900">Owner</p>
-                                    <p className="text-sm text-gray-500">{userStatus.data?.data.name}</p>
+                                    <p className="text-sm font-medium text-gray-300">Owner</p>
+                                    <p className="text-sm text-gray-400">{userStatus.data?.data.name}</p>
                                 </div>
                             </div>
-                            <p className="text-gray-600 leading-relaxed mb-6">{resource.description}</p>
-                            <div className="grid grid-cols-2 gap-4 mb-6">
-                                <div className="bg-gray-50 p-4 rounded-lg">
-                                    <p className="text-sm text-gray-500">Category</p>
-                                    <p className="text-gray-900 font-medium">{resource.category}</p>
-                                </div>
-                                <div className="bg-gray-50 p-4 rounded-lg">
-                                    <p className="text-sm text-gray-500">Resource Type</p>
-                                    <p className="text-gray-900 font-medium">{resource.resourceType}</p>
-                                </div>
+                            <p className="text-gray-300 leading-relaxed">{resource.description}</p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-gray-800/30 p-4 rounded-xl">
+                                <p className="text-sm text-gray-400">Category</p>
+                                <p className="text-gray-200 font-medium">{resource.category}</p>
+                            </div>
+                            <div className="bg-gray-800/30 p-4 rounded-xl">
+                                <p className="text-sm text-gray-400">Resource Type</p>
+                                <p className="text-gray-200 font-medium">{resource.resourceType}</p>
                             </div>
                         </div>
 
                         {/* Return Date Section */}
-                        <div className="border-t pt-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <div className="border-t border-gray-700/30 pt-6 space-y-4">
+                            <label className="block text-sm font-medium text-gray-300">
                                 Select Return Date
                             </label>
                             <Input
@@ -168,12 +173,16 @@ const ResourceDetailPage = () => {
                                 min={format(new Date(), "yyyy-MM-dd")}
                                 value={returnDate}
                                 onChange={(e) => setReturnDate(e.target.value)}
-                                className="w-full p-3 border rounded-lg mb-4 focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-5 py-3 rounded-xl bg-gray-800/50 border border-gray-700 
+                                         text-gray-200 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
                             />
                             <Button
                                 disabled={user.name === userStatus.data?.data.name || !returnDate}
                                 onClick={handleSubmit}
-                                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                                className="w-full py-4 rounded-xl font-bold transition-all
+                                         bg-gradient-to-r from-purple-600 to-blue-600 
+                                         hover:from-purple-700 hover:to-blue-700 
+                                         disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed"
                             >
                                 Request Resource
                             </Button>
