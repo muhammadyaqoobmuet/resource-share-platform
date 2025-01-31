@@ -70,6 +70,12 @@ const ResourceDetailPage = () => {
         });
     };
 
+    const handleOwnerClick = () => {
+        if (userId) {
+            navigate(`/user/${userId}`);
+        }
+    };
+
     if (isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#0D0D0D]">
@@ -94,6 +100,7 @@ const ResourceDetailPage = () => {
         </div>
     );
 
+    console.log(resource.userId);
     return (
         <div className="min-h-screen bg-[#0D0D0D] py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
@@ -139,7 +146,9 @@ const ResourceDetailPage = () => {
                     <div className="space-y-8">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-100 mb-4">{resource.name}</h1>
-                            <div className="flex items-center mb-6 bg-gray-800/30 p-4 rounded-xl">
+                            <div className="flex items-center mb-6 bg-gray-800/30 p-4 rounded-xl 
+                                          hover:bg-gray-800/50 transition-all cursor-pointer"
+                                onClick={handleOwnerClick}>
                                 <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
                                     <span className="text-white font-semibold">
                                         {userStatus.data?.data.name?.[0]?.toUpperCase()}
