@@ -3,15 +3,26 @@ import { Timeline } from "./Timeline";
 import { InputWithButton } from "./ui/InputWithButton";
 import NavBar from "./NavBar";
 import { motion } from "framer-motion";
-import {  BookOpen, Users, Share2 } from "lucide-react";
+import { BookOpen, Users, Share2 } from "lucide-react";
 import { BackgroundLines } from "./BackgroundLines";
 import { GlareCard } from "./ui/GlareCard";
 import { WobbleCardDemo } from "./WobbleCardDemo";
+import useAuthStore from "../store/authStore";
+import { useNavigate } from "react-router-dom";
 
 
 
 
 export function LandingPage() {
+    const navigate = useNavigate();
+    const { isAuthenticated, isVerified } = useAuthStore();
+
+    if (isAuthenticated && isVerified) {
+        navigate("/dashboard");
+    } else {
+        navigate("/");
+    }
+
     const features = [
         {
             icon: <BookOpen className="w-6 h-6" />,
@@ -34,7 +45,7 @@ export function LandingPage() {
     return (
         <div className="w-full flex flex-col bg-black/[0.96] antialiased bg-grid-white/[0.02] relative overflow-hidden">
 
-        
+
 
             <NavBar properties={"bg-transparent border-none"} />
             <div className="min-h-screen w-full flex md:items-center md:justify-center relative">
@@ -82,7 +93,7 @@ export function LandingPage() {
                         </motion.div>
 
                         {/* Features Grid */}
-                        
+
                     </div>
                 </div>
             </div>
@@ -91,9 +102,9 @@ export function LandingPage() {
 
             {/* Timeline Section */}
             <div className="bg-white/5 backdrop-blur-lg">
-            
-                            
-            
+
+
+
                 <Timeline />
             </div>
         </div>
