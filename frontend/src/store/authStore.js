@@ -11,7 +11,7 @@ const user = null;
 const useAuthStore = create((set) => ({
     token: localStorage.getItem("authToken") || null,
     user: user || null,
-
+    email: "",
     postCreatedBy: '',
     expiresIn: localStorage.getItem("authExpiresIn") || null,
     isAuthenticated: isAuthenticated,
@@ -28,7 +28,9 @@ const useAuthStore = create((set) => ({
         set({ isModalOpen: false })
     },
 
-
+    setEmail: (email) => {
+        set({ email })
+    },
 
 
     // reaaming other methods
@@ -79,7 +81,7 @@ const useAuthStore = create((set) => ({
             return "Login successful";
         } catch (error) {
             set({ isLoading: false, error: error.response?.data?.message || error.message });
-            throw new Error(error.response?.data?.message || "Login failed");
+            throw new Error(error?.response?.data?.message || "user not Verified");
         }
     },
 
