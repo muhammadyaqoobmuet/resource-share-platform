@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import axiosInstance from '@/utils/axiosInstance';
 import { toast } from 'react-toastify';
 import GenralLoader from './GenralLoader';
-import { Mail, AlertCircle } from 'lucide-react';
+import { Mail, AlertCircle, MessageCircle } from 'lucide-react';
 
 const SentRequest = () => {
     // Fetching data using React Query
@@ -57,12 +57,11 @@ const SentRequest = () => {
                 <div className="flex items-start space-x-3">
                     <AlertCircle className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                     <div className="flex-1">
-                        <h3 className="text-blue-400 font-medium mb-1">Communication Notice</h3>
-                        <p className="text-gray-300 text-sm leading-relaxed">
-                            For now, please use email to communicate with resource owners. by clicking on mailicon,  Our integrated
-                            chat system is under development and will be available soon.
+                        <h3 className="text-blue-400 font-medium mb-1">Communication Options</h3>
+                        <p className="text-gray-300 text-xl leading-relaxed ">
+                            you can communate about each request seprately by clicking the respective request  icons.
                             <span className="text-red-400 ml-1">
-                                Note: Any communication outside the platform is at your own risk.
+                                Note: share any sensitive information at your own risk.
                             </span>
                         </p>
                     </div>
@@ -105,19 +104,32 @@ const SentRequest = () => {
                                 <td className="px-4 py-3 sm:px-6 sm:py-4 text-gray-300 flex items-center">
                                     {row.lender.name}
                                     {row.status === "ACCEPTED" && (
-                                        <a
-                                            href={`mailto:${row.lender.email}`}
-                                            className="ml-2 inline-flex items-center p-1 rounded-full bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/30 transition-all hover:scale-110 group relative"
-                                            title={`Send email to ${row.lender.email}`}
-                                            aria-label={`Contact ${row.lender.name}`}
-                                        >
-                                            <Mail className="w-4 h-4 text-cyan-300" />
-                                            {/* Tooltip-style email display */}
-                                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-cyan-100 text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg border border-gray-700">
-                                                {row.lender.email}
-                                                <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 transform rotate-45 border-b border-r border-gray-700"></div>
-                                            </span>
-                                        </a>
+                                        <div className="flex items-center gap-2">
+                                            <a
+                                                href={`mailto:${row.lender.email}`}
+                                                className="ml-2 inline-flex items-center p-1 rounded-full bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/30 transition-all hover:scale-110 group relative"
+                                                title={`Send email to ${row.lender.email}`}
+                                            >
+                                                <Mail className="w-4 h-4 text-cyan-300" />
+                                                <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-cyan-100 text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg border border-gray-700">
+                                                    {row.lender.email}
+                                                    <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 transform rotate-45 border-b border-r border-gray-700"></div>
+                                                </span>
+                                            </a>
+                                            <a
+                                                href={`https://tlk.io/request-${row.id}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center p-1 rounded-full bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 transition-all hover:scale-110 group relative"
+                                                title="Start private chat"
+                                            >
+                                                <MessageCircle className="w-4 h-4 text-purple-300" />
+                                                <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-purple-100 text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg border border-gray-700">
+                                                    Private Chat Room
+                                                    <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 transform rotate-45 border-b border-r border-gray-700"></div>
+                                                </span>
+                                            </a>
+                                        </div>
                                     )}
                                 </td>
                                 <td className="px-4 py-3 sm:px-6 sm:py-4">
