@@ -79,7 +79,7 @@ function Login() {
                                     {...register("email", {
                                         required: "Email is required",
                                         pattern: {
-                                            value: /^[A-Z0-9._%+-]+/i,
+                                            value: /^[A-Z0-9._%+-]+@(students\.met\.edu\.pk|faculty\.muet\.edu\.pk)$/i,
                                             message: "Please enter a valid email"
                                         }
                                     })}
@@ -185,7 +185,7 @@ function Login() {
                         {error && (
                             <div className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
                                 <p className="text-red-400 text-sm text-center">{error}
-                                <br/>
+                                    <br />
                                     <span onClick={() => navigate('/verify')} className="text-white underline cursor-pointer">account not verified ?</span>
                                 </p>
                             </div>
