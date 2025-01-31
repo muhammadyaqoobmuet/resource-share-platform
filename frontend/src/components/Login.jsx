@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
-import useAuthStore from "@/store/authStore";
+
 import { Eye, EyeOff } from "lucide-react";
+import useAuthStore from "../store/authStore";
 
 function Login() {
     const { login, isLoading, error, isAuthenticated } = useAuthStore();
@@ -79,7 +80,7 @@ function Login() {
                                     {...register("email", {
                                         required: "Email is required",
                                         pattern: {
-                                            value: /^[A-Z0-9._%+-]/,
+                                            value: /^[A-Z0-9._%+-]+/i,
                                             message: "Please enter a valid email"
                                         }
                                     })}
