@@ -16,30 +16,27 @@ import MyPosts from './components/MyPosts';
 import PrivatePosts from './routes/PrivatePosts';
 import ResourceDetailPage from './components/ResourceDetailPage';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-
 import { ReactQueryDevtools, } from '@tanstack/react-query-devtools';
-
 import SentRequest from './components/SentRequest';
 import RequestHave from './components/RequestHave';
 import Transactions from './components/Transactions';
-
-
-
+import UserProfile from './components/UserProfile';
+import UserPublicProfile from './components/UserPublicProfile';
 
 function App() {
   const location = useLocation()
   const queryClient = new QueryClient()
-  const { isAuthenticated, user } = useAuthStore();
-
-
+  const { isAuthenticated, user, getUser } = useAuthStore();
 
   useEffect(() => {
-    console.log(user?.id);
-  }, [user])
+    if (isAuthenticated) {
+      getUser();
+    }
+  }, [isAuthenticated, getUser]);
+
   return (
     <>
       <QueryClientProvider client={queryClient}>
-
         {location.pathname !== "/" && <NavBar />}
         <ToastContainer />
         <Routes>
@@ -48,9 +45,6 @@ function App() {
               <Dashboard />
             </PrivateRoute>
           } />
-
-
-
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/sent-request" element={<SentRequest />} />
           <Route path="/requests" element={<RequestHave />} />
@@ -68,17 +62,16 @@ function App() {
               <MyPosts />
             </PrivatePosts>
           } />
-
-
-
           <Route path="/verify" element={<VerifyOTP />} />
-
-
+          <Route path="/profile" element={
+            <PrivateRoute>
+              <UserProfile />
+            </PrivateRoute>
+          } />
+          <Route path="/user/:userId" element={<UserPublicProfile />} />
         </Routes>
         <Footer />
-        {/* dev tool in reactqurey add that  */}
         <ReactQueryDevtools initialIsOpen={true} />
-
       </QueryClientProvider>
     </>
   );

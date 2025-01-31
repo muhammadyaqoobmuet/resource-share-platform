@@ -20,7 +20,7 @@ function Signup() {
 
     const navigate = useNavigate();
     // Destructure required values and methods from the store
-    const { signup, setUser, isLoading, error } = useAuthStore();
+    const { signup, setUser, isLoading, error, setEmail } = useAuthStore();
     const password = watch("password", ""); // Watch password field
 
     // Password strength checker
@@ -46,7 +46,8 @@ function Signup() {
         try {
             await signup(data);
             toast.success("Signup successful! Please verify your email.");
-            setUser(data.name);
+            setUser(data?.name);
+            setEmail(data?.email);
             navigate("/verify");
         } catch (error) {
             toast.error("Signup failed. Please try again.");
