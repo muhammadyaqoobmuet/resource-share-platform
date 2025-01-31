@@ -19,7 +19,7 @@ const ResourceList = () => {
     const [selectedResource, setSelectedResource] = useState(null);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const navigate = useNavigate()
-    const list = ["DONATED", "UNAVAILABLE"]
+    const list = ["DONATED", "UNAVAILABLE", "BORROWED"]
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
@@ -46,6 +46,7 @@ const ResourceList = () => {
                 page: currentPage,
                 size: pageSize
             };
+
 
             // Add search param if exists
             if (debouncedSearchQuery) {
@@ -181,6 +182,7 @@ const ResourceList = () => {
         );
     }
 
+    console.log(data);
     return (
         <div className="max-w-[1350px] mx-auto px-4 py-8  min-h-screen">
             <div className="text-center mb-12">
