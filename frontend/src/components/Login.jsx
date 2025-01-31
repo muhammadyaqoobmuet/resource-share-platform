@@ -12,7 +12,7 @@ function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-
+    console.log(errors);
     // If already authenticated, redirect to dashboard
     if (isAuthenticated) {
         navigate("/dashboard");
@@ -25,6 +25,10 @@ function Login() {
             toast.success("Welcome back! 🎉");
             navigate("/dashboard");
         } catch (error) {
+            if (error?.message == "account not Verified") {
+                navigate('/verify')
+            }
+
             toast.error(error?.message || "Invalid credentials. Please try again.");
         }
     };
@@ -44,7 +48,7 @@ function Login() {
                             <h1 className="text-3xl poppins-semibold tracking-wide font-bold mb-4 bg-gradient-to-r from-blue-400 via-[#cd9edae7] to-white bg-clip-text text-transparent">
                                 Explore communities
                             </h1>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -180,7 +184,10 @@ function Login() {
                         {/* Error Message */}
                         {error && (
                             <div className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                                <p className="text-red-400 text-sm text-center">{error}</p>
+                                <p className="text-red-400 text-sm text-center">{error}
+                                <br/>
+                                    <span onClick={() => navigate('/verify')} className="text-white underline cursor-pointer">account not verified ?</span>
+                                </p>
                             </div>
                         )}
                     </div>
