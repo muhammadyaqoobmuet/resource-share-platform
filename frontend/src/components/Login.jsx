@@ -79,7 +79,7 @@ function Login() {
                                     {...register("email", {
                                         required: "Email is required",
                                         pattern: {
-                                            value: /^[A-Z0-9._%+-]+@(students\.met\.edu\.pk|faculty\.muet\.edu\.pk)$/i,
+                                            value: /^[A-Z0-9._%+-]/,
                                             message: "Please enter a valid email"
                                         }
                                     })}
