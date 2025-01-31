@@ -111,7 +111,7 @@ function Signup() {
                                     {...register("email", {
                                         required: "Email is required",
                                         pattern: {
-                                            value: /^[A-Z0-9._%+-]+/i,
+                                            value: /^[A-Z0-9._%+-]+@(students\.met\.edu\.pk|faculty\.muet\.edu\.pk)$/i,
                                             message: "Must be a valid MUET student email"
                                         }
                                     })}
