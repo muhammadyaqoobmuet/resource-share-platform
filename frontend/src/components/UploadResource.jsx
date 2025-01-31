@@ -126,11 +126,11 @@ const UploadResource = () => {
                                     onChange={(e) => setCategory(e.target.value)}
                                     className="w-full px-5 py-3 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-200 appearance-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all"
                                 >
-                                    <option value="BOOKS">Books</option>
-                                    <option value="LAB_EQUIPMENT">Lab Equipment</option>
-                                    <option value="ELECTRONICS">Electronics</option>
-                                    <option value="STATIONERY">Stationery</option>
-                                    <option value="MISCELLANEOUS">Miscellaneous</option>
+                                    <option className="text-black" value="BOOKS">Books</option>
+                                    <option className="text-black" value="LAB_EQUIPMENT">Lab Equipment</option>
+                                    <option className="text-black" value="ELECTRONICS">Electronics</option>
+                                    <option className="text-black" value="STATIONERY">Stationery</option>
+                                    <option className="text-black" value="MISCELLANEOUS">Miscellaneous</option>
                                 </select>
                                 <ArrowRight className="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2 transform rotate-90 pointer-events-none" />
                             </div>
@@ -145,8 +145,8 @@ const UploadResource = () => {
                                     onChange={(e) => setResourceType(e.target.value)}
                                     className="w-full px-5 py-3 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-200 appearance-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all"
                                 >
-                                    <option value="LEND">Lend</option>
-                                    <option value="DONATE">Donate</option>
+                                    <option className="text-black" value="LEND">Lend</option>
+                                    <option className="text-black" value="DONATE">Donate</option>
                                 </select>
                                 <ArrowRight className="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2 transform rotate-90 pointer-events-none" />
                             </div>
