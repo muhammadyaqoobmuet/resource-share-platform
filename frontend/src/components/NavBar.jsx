@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button"; // Make sure this is imported correctly
 import useAuthStore from "@/store/authStore"; // Assuming you have a store to manage authentication
-import { LogOutIcon, MailIcon, MenuIcon, Upload, PoundSterling, ChevronDown } from "lucide-react";
+import { LogOutIcon, MailIcon, MenuIcon, Upload, PoundSterling, ChevronDown, BookOpen } from "lucide-react";
 import ProfileCard from "./ProfileCard";
 
 
-function NavBar({ properties  }) {
+function NavBar({ properties }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for toggling the sidebar
   const [showRequestsDropdown, setShowRequestsDropdown] = useState(false);
   const { isAuthenticated, logout } = useAuthStore();
@@ -68,6 +68,9 @@ function NavBar({ properties  }) {
                 </button>
 
                 <div className="hidden lg:flex space-x-4 lg:items-center">
+
+
+
                   <Button
                     onClick={() => navigate("/upload")}
                     className="text-white bg-transparent hover:bg-white/10 border border-white/20"
@@ -142,7 +145,7 @@ function NavBar({ properties  }) {
           }`}
       >
         <div className="flex justify-self-end items-center p-6  ">
-          
+
           <button
             onClick={toggleSidebar}
             className="text-white text-2xl p-2 rounded hover:bg-white/10 hover:rotate-180 transition-all"

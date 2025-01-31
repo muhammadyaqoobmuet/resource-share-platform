@@ -43,7 +43,7 @@ function VerifyOTP() {
                             </label>
                             <Input
                                 type="email"
-                                value={email}
+                                value={email || null}
                                 placeholder="you@students.muet.edu.pk"
                                 className="bg-gray-800 border-gray-700 text-white rounded-lg py-2 sm:py-3 px-4 
                                          focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
