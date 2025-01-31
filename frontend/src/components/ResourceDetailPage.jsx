@@ -159,7 +159,7 @@ const ResourceDetailPage = () => {
                                     <p className="text-sm text-gray-400">{userStatus.data?.data.name}</p>
                                 </div>
                             </div>
-                            <p className="text-gray-300 leading-relaxed">{resource.description}</p>
+                            <p className="text-gray-300 leading-relaxed"> description : {resource.description}</p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">

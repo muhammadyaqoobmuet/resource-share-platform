@@ -364,8 +364,8 @@ const ResourceList = () => {
 
                             <div className="p-6 space-y-4">
                                 <h2 className="text-2xl font-semibold   text-gray-50">{resource.name}</h2>
-                                <p className="text-gray-100 text-lg max-w-full text-balance leading-relaxed font-light">
-                                    description:  {resource.description}
+                                <p className="text-gray-100 text-lg poppins max-w-full text-balance leading-relaxed font-light">
+                                    {resource.description}
                                 </p>
                                 <div className="flex items-center justify-between text-lg h-auto">
                                     <span className="text-[#b2b4b6] font-medium text-balance mb-auto">
