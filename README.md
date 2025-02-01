@@ -53,7 +53,7 @@ Configure .env file with your credentials
 
 
 ##Acknowledgements 🙏
-###Inspired by the need for accessible educational resources
+** Inspired by the need for accessible educational resources
 
-####Built with guidance from various open source projects
+#Built with guidance from various open source projects
 Special thanks to all contributors
