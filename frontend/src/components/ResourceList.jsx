@@ -14,16 +14,17 @@ import { useQuery } from "@tanstack/react-query";
 // Add this skeleton component at the top of the file
 const ResourceCardSkeleton = () => (
     <div className="bg-[#292929] rounded-2xl overflow-hidden shadow-2xl">
-        <div className="w-full h-52 bg-gray-800 animate-pulse" />
+        <div className="w-full h-52 bg-gray-700 animate-pulse" />
         <div className="p-6 space-y-4">
-            <div className="h-8 bg-gray-800 rounded w-3/4 animate-pulse" />
+            <div className="h-8 bg-gray-700 rounded w-3/4 animate-pulse" />
             <div className="space-y-2">
-                <div className="h-4 bg-gray-800 rounded w-full animate-pulse" />
-                <div className="h-4 bg-gray-800 rounded w-5/6 animate-pulse" />
+
+                <div className="h-4 bg-gray-700 rounded w-full animate-pulse" />
+                <div className="h-4 bg-gray-700 rounded w-5/6 animate-pulse" />
             </div>
-            <div className="h-6 bg-gray-800 rounded w-1/3 animate-pulse" />
+            <div className="h-6 bg-gray-700 rounded w-1/3 animate-pulse" />
         </div>
-        <div className="h-12 bg-gray-800 animate-pulse" />
+        <div className="h-12 bg-gray-700 animate-pulse" />
     </div>
 );
 
