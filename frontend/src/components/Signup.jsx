@@ -213,7 +213,7 @@ function Signup() {
                             <p className="text-center text-gray-400 text-sm sm:text-base">
                                 have an account?{'  '}
                                 <Link
-                                    to="/signup"
+                                    to="/login"
                                     className="text-blue-500 hover:text-blue-400 transition-colors font-medium"
                                 >
                                     Login now
