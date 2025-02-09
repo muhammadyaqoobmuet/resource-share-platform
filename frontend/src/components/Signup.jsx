@@ -20,7 +20,7 @@ function Signup() {
 
     const navigate = useNavigate();
     // Destructure required values and methods from the store
-    const { signup, setUser, isLoading, error, setEmail } = useAuthStore();
+    const { signup, setUser, isLoading, setEmail } = useAuthStore();
     const password = watch("password", ""); // Watch password field
 
     // Password strength checker

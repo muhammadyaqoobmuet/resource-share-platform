@@ -23,21 +23,21 @@ function Transactions() {
     // Fetch borrowed items
     const { data: borrowedItems, isLoading: borrowedLoading } = useQuery({
         queryKey: ["borrowedItems"],
-        queryFn: () => axios.get("http://localhost:8080/transactions/borrowed", { headers })
+        queryFn: () => axios.get("https://backend-production-04f5.up.railway.app/transactions/borrowed", { headers })
             .then((res) => res.data),
     });
 
     // Fetch lent items
     const { data: lentItems, isLoading: lentLoading } = useQuery({
         queryKey: ["lentItems"],
-        queryFn: () => axios.get("http://localhost:8080/transactions/lent", { headers })
+        queryFn: () => axios.get("https://backend-production-04f5.up.railway.app/transactions/lent", { headers })
             .then((res) => res.data),
     });
 
     // Add donation items query
     const { data: donationItems, isLoading: donationLoading } = useQuery({
         queryKey: ["donationItems"],
-        queryFn: () => axios.get("http://localhost:8080/donation/", { headers })
+        queryFn: () => axios.get("https://backend-production-04f5.up.railway.app/donation/", { headers })
             .then((res) => res.data),
     });
 
@@ -46,7 +46,7 @@ function Transactions() {
     // Mutations
     const returnMutation = useMutation({
         mutationFn: (id) => axios.patch(
-            `http://localhost:8080/transactions/return/${id}`, {}, { headers }
+            `https://backend-production-04f5.up.railway.app/transactions/return/${id}`, {}, { headers }
 
 
         ),
@@ -61,7 +61,7 @@ function Transactions() {
 
     const confirmMutation = useMutation({
         mutationFn: (id) => axios.patch(
-            `http://localhost:8080/transactions/confirm/${id}`,
+            `https://backend-production-04f5.up.railway.app/transactions/confirm/${id}`,
             {},
             { headers }
         ),
@@ -76,7 +76,7 @@ function Transactions() {
 
     const declineMutation = useMutation({
         mutationFn: ({ id, disputeType }) => axios.patch(
-            `http://localhost:8080/transactions/decline/${id}`,
+            `https://backend-production-04f5.up.railway.app/transactions/decline/${id}`,
             { disputeType },
             { headers }
         ),
@@ -164,10 +164,12 @@ function Transactions() {
                                     Active Dispute Notice
                                 </h3>
                                 <p className="text-gray-300 leading-relaxed">
-                                    We've noticed there's an ongoing dispute with one or more of your transactions.
+                                    We&apos;ve noticed there&apos;s an ongoing dispute with one or more of your transactions.
                                     Our admin team has been notified and will review the case shortly.
                                     We appreciate your patience while we work to resolve this matter.
                                 </p>
+
+
                                 <div className="mt-4 flex flex-wrap gap-3">
                                     <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-red-500/20 text-red-300 border border-red-500/30">
                                         Under Review
