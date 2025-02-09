@@ -29,20 +29,7 @@ const ResourceCardSkeleton = () => (
 
 const ResourceListSkeleton = () => (
     <div className="max-w-[1350px] mx-auto px-4 py-8 min-h-screen">
-        {/* Header Skeleton */}
-        <div className="text-center mb-12">
-            <div className="h-12 bg-gray-800 rounded w-64 mx-auto mb-4 animate-pulse" />
-            <div className="h-6 bg-gray-800 rounded w-96 mx-auto animate-pulse" />
-        </div>
 
-        {/* Search Bar Skeleton */}
-        <div className="max-w-3xl mx-auto mb-16">
-            <div className="flex items-center gap-4">
-                <div className="flex-1 h-14 bg-gray-800 rounded-2xl animate-pulse" />
-                <div className="w-16 h-14 bg-gray-800 rounded-xl animate-pulse" />
-                <div className="w-14 h-14 bg-gray-800 rounded-xl animate-pulse" />
-            </div>
-        </div>
 
         {/* Grid Skeleton */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
