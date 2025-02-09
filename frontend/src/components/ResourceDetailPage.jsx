@@ -13,7 +13,7 @@ import { Loader } from "lucide-react";
 const fetchResourceById = async (id, token) => {
     if (!token) throw new Error("No token found");
     try {
-        const response = await axios.get(`http://localhost:8080/resource/${id}`, {
+        const response = await axios.get(`https://backend-production-04f5.up.railway.app/resource/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
@@ -22,6 +22,51 @@ const fetchResourceById = async (id, token) => {
         throw new Error("Failed to fetch resource details");
     }
 };
+
+const ResourceDetailSkeleton = () => (
+    <div className="min-h-screen bg-[#0D0D0D] py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+            <div className="flex justify-end mb-6">
+                <div className="w-6 h-6 bg-gray-800 rounded animate-pulse" />
+            </div>
+
+            <div className="bg-[#0d0d0d] shadow-2xl rounded-3xl p-8 border border-gray-700/30 overflow-hidden">
+                {/* Image Skeleton */}
+                <div className="relative h-96 rounded-2xl overflow-hidden mb-8 bg-gray-800 animate-pulse" />
+
+                {/* Content Skeleton */}
+                <div className="space-y-8">
+                    <div>
+                        <div className="h-8 bg-gray-800 rounded-lg w-3/4 mb-4 animate-pulse" />
+                        <div className="flex items-center mb-6 bg-gray-800/30 p-4 rounded-xl">
+                            <div className="w-10 h-10 bg-gray-800 rounded-full animate-pulse" />
+                            <div className="ml-3">
+                                <div className="h-4 bg-gray-800 rounded w-20 mb-2 animate-pulse" />
+                                <div className="h-4 bg-gray-800 rounded w-24 animate-pulse" />
+                            </div>
+                        </div>
+                        <div className="h-20 bg-gray-800 rounded-lg animate-pulse" />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-gray-800/30 p-4 rounded-xl">
+                            <div className="h-4 bg-gray-800 rounded w-20 mb-2 animate-pulse" />
+                            <div className="h-4 bg-gray-800 rounded w-24 animate-pulse" />
+                        </div>
+                        <div className="bg-gray-800/30 p-4 rounded-xl">
+                            <div className="h-4 bg-gray-800 rounded w-20 mb-2 animate-pulse" />
+                            <div className="h-4 bg-gray-800 rounded w-24 animate-pulse" />
+                        </div>
+                    </div>
+
+                    <div className="border-t border-gray-700/30 pt-6">
+                        <div className="h-12 bg-gray-800 rounded-xl animate-pulse" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+);
 
 const ResourceDetailPage = () => {
     const [returnDate, setReturnDate] = useState("");
@@ -77,11 +122,7 @@ const ResourceDetailPage = () => {
     };
 
     if (isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-[#0D0D0D]">
-                <Loader className="animate-spin text-blue-500" size={48} />
-            </div>
-        );
+        return <ResourceDetailSkeleton />;
     }
 
     if (isError || !resource) return (

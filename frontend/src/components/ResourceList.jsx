@@ -11,6 +11,48 @@ import { RefreshCcwDotIcon } from "lucide-react"
 import axiosInstance from "@/utils/axiosInstance";
 import { useQuery } from "@tanstack/react-query";
 
+// Add this skeleton component at the top of the file
+const ResourceCardSkeleton = () => (
+    <div className="bg-[#292929] rounded-2xl overflow-hidden shadow-2xl">
+        <div className="w-full h-52 bg-gray-800 animate-pulse" />
+        <div className="p-6 space-y-4">
+            <div className="h-8 bg-gray-800 rounded w-3/4 animate-pulse" />
+            <div className="space-y-2">
+                <div className="h-4 bg-gray-800 rounded w-full animate-pulse" />
+                <div className="h-4 bg-gray-800 rounded w-5/6 animate-pulse" />
+            </div>
+            <div className="h-6 bg-gray-800 rounded w-1/3 animate-pulse" />
+        </div>
+        <div className="h-12 bg-gray-800 animate-pulse" />
+    </div>
+);
+
+const ResourceListSkeleton = () => (
+    <div className="max-w-[1350px] mx-auto px-4 py-8 min-h-screen">
+        {/* Header Skeleton */}
+        <div className="text-center mb-12">
+            <div className="h-12 bg-gray-800 rounded w-64 mx-auto mb-4 animate-pulse" />
+            <div className="h-6 bg-gray-800 rounded w-96 mx-auto animate-pulse" />
+        </div>
+
+        {/* Search Bar Skeleton */}
+        <div className="max-w-3xl mx-auto mb-16">
+            <div className="flex items-center gap-4">
+                <div className="flex-1 h-14 bg-gray-800 rounded-2xl animate-pulse" />
+                <div className="w-16 h-14 bg-gray-800 rounded-xl animate-pulse" />
+                <div className="w-14 h-14 bg-gray-800 rounded-xl animate-pulse" />
+            </div>
+        </div>
+
+        {/* Grid Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(9)].map((_, index) => (
+                <ResourceCardSkeleton key={index} />
+            ))}
+        </div>
+    </div>
+);
+
 const ResourceList = () => {
     const { fetchResources, resources, user, deleteProduct, isLoading } = useAuthStore();
     const [activeMenu, setActiveMenu] = useState(null);
@@ -176,10 +218,9 @@ const ResourceList = () => {
         status: ["Any", "AVAILABLE", "UNAVAILABLE", "DONATED"]
     };
 
+    // Replace the loading check with skeleton
     if (isLoading || localLoading || queryLoading) {
-        return (
-            <GenralLoader />
-        );
+        return <ResourceListSkeleton />;
     }
 
     console.log(data);
