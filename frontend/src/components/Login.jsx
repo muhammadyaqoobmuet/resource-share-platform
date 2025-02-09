@@ -40,7 +40,7 @@ function Login() {
                 {/* Image Section */}
                 <div className="relative w-full md:w-1/2 h-64 md:h-auto">
                     <img
-                        src="./../../public/images/login.jpg"
+                        src="./images/login.jpg"
                         className="h-full grayscale  w-full object-cover"
                         alt="Student collaboration"
                     />

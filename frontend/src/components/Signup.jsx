@@ -61,7 +61,7 @@ function Signup() {
                 {/* Image Section - Full width on mobile, half on desktop */}
                 <div className="relative w-full md:w-1/2 h-64 md:h-auto">
                     <img
-                        src="./../../public/images/shareme.jpg"
+                        src="./images/shareme.jpg"
                         className="h-full w-full object-cover"
                         alt="Student collaboration"
                     />
