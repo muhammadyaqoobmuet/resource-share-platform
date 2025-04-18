@@ -13,7 +13,7 @@ import { Loader } from "lucide-react";
 const fetchResourceById = async (id, token) => {
     if (!token) throw new Error("No token found");
     try {
-        const response = await axios.get(`https://backend-production-04f5.up.railway.app/resource/${id}`, {
+        const response = await axios.get(`https://backend-production-8b19f.up.railway.app/resource/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
