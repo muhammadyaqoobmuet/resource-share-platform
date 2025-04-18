@@ -74,7 +74,7 @@ function Login() {
                                 </label>
                                 <Input
                                     type="email"
-                                    placeholder="you@students.muet.edu.pk"
+                                    placeholder="eg. you@students.muet.edu.pk"
                                     className="bg-gray-800 border-gray-700 text-white rounded-lg py-2 sm:py-3 px-4 
                                              focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     {...register("email", {
