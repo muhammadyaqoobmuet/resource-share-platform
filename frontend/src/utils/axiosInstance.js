@@ -3,7 +3,7 @@ import axios from "axios";
 import useAuthStore from "@/store/authStore";
 
 const axiosInstance = axios.create({
-    baseURL: "https://backend-production-04f5.up.railway.app/",
+    baseURL: "https://backend-production-8b19f.up.railway.app/",
 });
 
 axiosInstance.interceptors.request.use((config) => {
