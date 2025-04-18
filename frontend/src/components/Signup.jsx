@@ -106,14 +106,11 @@ function Signup() {
                                 </label>
                                 <Input
                                     type="email"
-                                    placeholder="you@students.muet.edu.pk"
+                                    placeholder="xyz@universtymail.com"
                                     className="bg-gray-800 border-gray-700 text-white rounded-lg py-2 sm:py-3 px-4 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     {...register("email", {
                                         required: "Email is required",
-                                        pattern: {
-                                            value: /^[A-Z0-9._%+-]+@(students\.muet\.edu\.pk|faculty\.muet\.edu\.pk)$/i,
-                                            message: "Must be a valid MUET student email"
-                                        }
+
                                     })}
                                 />
                                 {errors.email && (
