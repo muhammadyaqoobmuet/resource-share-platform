@@ -58,7 +58,7 @@ const useAuthStore = create((set) => ({
     signup: async (data) => {
         set({ isLoading: true, error: null });
         try {
-            const response = await axios.post("https://backend-production-8b19f.up.railway.app/auth/signup", data);
+            const response = await axios.post("https://campus-hub-api-08z4.onrender.com/auth/signup", data);
             set({ isLoading: false });
             return response.data.message;
         } catch (error) {
@@ -71,7 +71,7 @@ const useAuthStore = create((set) => ({
     login: async (data) => {
         set({ isLoading: true, error: null });
         try {
-            const response = await axios.post("https://backend-production-8b19f.up.railway.app/auth/login", data);
+            const response = await axios.post("https://campus-hub-api-08z4.onrender.com/auth/login", data);
             const { token, expiresIn, user } = response.data;
             set({ isLoading: false, isAuthenticated: true, isVerified: true });
 
@@ -89,7 +89,7 @@ const useAuthStore = create((set) => ({
     verify: async (data) => {
         set({ isLoading: true, error: null });
         try {
-            const response = await axios.post("https://backend-production-8b19f.up.railway.app/auth/verify", data);
+            const response = await axios.post("https://campus-hub-api-08z4.onrender.com/auth/verify", data);
             set({ isLoading: false, isVerified: true });
 
             // Update localStorage when verified
