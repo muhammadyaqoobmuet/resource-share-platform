@@ -23,21 +23,21 @@ function Transactions() {
     // Fetch borrowed items
     const { data: borrowedItems, isLoading: borrowedLoading } = useQuery({
         queryKey: ["borrowedItems"],
-        queryFn: () => axios.get("https://backend-production-8b19f.up.railway.app/transactions/borrowed", { headers })
+        queryFn: () => axios.get("https://campus-hub-api-08z4.onrender.com/transactions/borrowed", { headers })
             .then((res) => res.data),
     });
 
     // Fetch lent items
     const { data: lentItems, isLoading: lentLoading } = useQuery({
         queryKey: ["lentItems"],
-        queryFn: () => axios.get("https://backend-production-8b19f.up.railway.app/transactions/lent", { headers })
+        queryFn: () => axios.get("https://campus-hub-api-08z4.onrender.com/transactions/lent", { headers })
             .then((res) => res.data),
     });
 
     // Add donation items query
     const { data: donationItems, isLoading: donationLoading } = useQuery({
         queryKey: ["donationItems"],
-        queryFn: () => axios.get("https://backend-production-8b19f.up.railway.app/donation/", { headers })
+        queryFn: () => axios.get("https://campus-hub-api-08z4.onrender.com/donation/", { headers })
             .then((res) => res.data),
     });
 
