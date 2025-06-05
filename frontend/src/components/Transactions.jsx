@@ -46,7 +46,7 @@ function Transactions() {
     // Mutations
     const returnMutation = useMutation({
         mutationFn: (id) => axios.patch(
-            `https://backend-production-8b19f.up.railway.app/transactions/return/${id}`, {}, { headers }
+            `https://campus-hub-api-08z4.onrender.com/transactions/return/${id}`, {}, { headers }
 
 
         ),
@@ -61,7 +61,7 @@ function Transactions() {
 
     const confirmMutation = useMutation({
         mutationFn: (id) => axios.patch(
-            `https://backend-production-8b19f.up.railway.app/transactions/confirm/${id}`,
+            `https://campus-hub-api-08z4.onrender.com/transactions/confirm/${id}`,
             {},
             { headers }
         ),
@@ -76,7 +76,7 @@ function Transactions() {
 
     const declineMutation = useMutation({
         mutationFn: ({ id, disputeType }) => axios.patch(
-            `https://backend-production-8b19f.up.railway.app/transactions/decline/${id}`,
+            `https://campus-hub-api-08z4.onrender.com/transactions/decline/${id}`,
             { disputeType },
             { headers }
         ),
